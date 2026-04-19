@@ -21,7 +21,7 @@
       --muted-lt:   #A8A4A0;
       --font:       'Nunito', 'Trebuchet MS', sans-serif;
     }
-    html { scroll-behavior: smooth; background: #fff; }
+    html { scroll-behavior: smooth; background: #fff; overflow-x: hidden; }
     body { background: transparent; font-family: var(--font); color: var(--dark); overflow-x: hidden; }
 
     /* ─── NAV ─── */
@@ -313,7 +313,7 @@
       display: inline-flex; align-items: center; gap: 8px;
       font-size: .6rem; letter-spacing: .18em; text-transform: uppercase;
       color: var(--muted); cursor: pointer; border: none; background: none;
-      font-family: var(--font); padding: 0; transition: color .2s;
+      font-family: var(--font); padding: 0; margin-bottom: 2.5rem; transition: color .2s;
     }
     .sound-back:hover { color: var(--dark); }
     .sound-back-arrow { font-size: .8rem; }
@@ -595,13 +595,26 @@
     .dm-streak-pip { width: 8px; height: 8px; border-radius: 50%; background: var(--stroke); }
     .dm-streak-pip.done { background: var(--dark-btn); }
     /* ─── DM ASK CITY (Gemini) ─── */
-    .dm-ask { margin-top: 2.4rem; width: 100%; max-width: 560px; }
+    .dm-ask { margin-top: 2.4rem; width: 100%; max-width: 860px; }
     .dm-ask-label {
       font-size: .54rem; letter-spacing: .22em; text-transform: uppercase;
-      color: var(--muted-lt); margin-bottom: 1rem;
+      color: var(--muted-lt); margin-bottom: 1.2rem;
     }
-    .dm-ask-label span { color: var(--muted); }
-    .dm-ask-chips { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 1rem; }
+    .dm-ask-section-label {
+      font-size: .5rem; letter-spacing: .2em; text-transform: uppercase;
+      color: var(--muted-lt); margin-bottom: .6rem; margin-top: 1.2rem;
+    }
+    .dm-ask > .dm-ask-section-label:first-of-type { margin-top: 0; }
+    .dm-ask-address { display: flex; flex-direction: column; gap: .5rem; }
+    .dm-ask-city-input {
+      width: 100%; box-sizing: border-box;
+      font-family: var(--font); font-size: .62rem; letter-spacing: .06em;
+      background: rgba(245,243,240,0.5); border: 1.5px solid rgba(200,196,190,0.4); border-radius: 10px;
+      padding: .65rem 1rem; outline: none; color: var(--dark);
+      transition: border-color .2s;
+    }
+    .dm-ask-city-input:focus { border-color: var(--stroke-mid); }
+    .dm-ask-chips { display: flex; flex-wrap: wrap; gap: .5rem; }
     .dm-ask-chip {
       font-family: var(--font); font-size: .55rem; letter-spacing: .1em; text-transform: uppercase;
       color: var(--muted); background: rgba(245,243,240,0.7); border: 1.5px solid rgba(200,196,190,0.45);
@@ -609,6 +622,17 @@
       transition: background .15s, color .15s;
     }
     .dm-ask-chip:hover { background: rgba(228,224,220,0.9); color: var(--dark); }
+    .dm-ask-chip-highlight {
+      background: rgba(255,220,60,0.25); border-color: rgba(220,180,0,0.55); color: #7a6000;
+    }
+    .dm-ask-chip-highlight:hover { background: rgba(255,220,60,0.45); color: #5a4500; }
+    .dm-ask-columns {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start;
+    }
+    .dm-ask-left { display: flex; flex-direction: column; }
+    .dm-ask-right { display: flex; flex-direction: column; }
+    .dm-ask-left .dm-ask-section-label:first-child,
+    .dm-ask-right .dm-ask-section-label:first-child { margin-top: 0; }
     .dm-ask-input-row { display: flex; gap: .5rem; align-items: center; }
     .dm-ask-input {
       flex: 1; font-family: var(--font); font-size: .62rem; letter-spacing: .06em;
@@ -624,12 +648,16 @@
       transition: background .2s; line-height: 1;
     }
     .dm-ask-send:hover { background: rgba(228,224,220,1); color: var(--dark); }
+    .dm-ask-right { position: relative; }
     .dm-ask-response {
-      margin-top: 1rem; background: rgba(255,255,255,0.75); border: 1.5px solid rgba(200,196,190,0.35);
+      overflow-y: auto; max-height: 320px;
+      background: rgba(255,255,255,0.75); border: 1.5px solid rgba(200,196,190,0.35);
       border-radius: 14px; padding: 1.2rem 1.4rem;
       font-size: .62rem; letter-spacing: .04em; line-height: 1.8;
-      color: var(--dark); white-space: pre-wrap;
+      color: var(--muted); white-space: pre-wrap; box-sizing: border-box;
     }
+    .dm-ask-response.has-answer { color: var(--dark); }
+    .dm-ask-response.dm-ask-loading { color: var(--muted-lt); font-style: italic; }
     .dm-ask-loading { color: var(--muted-lt); font-style: italic; }
 
     /* ─── STAR BURST ─── */
@@ -659,9 +687,60 @@
       padding: 100px 5vw 6rem; position: relative; z-index: 1;
       animation: fadeUp .6s ease forwards;
     }
-    .pd-header { margin-bottom: 2.8rem; }
+    .pd-header { margin-bottom: 1.6rem; }
     .pd-eyebrow { font-size: .54rem; letter-spacing: .24em; text-transform: uppercase; color: var(--muted-lt); margin-bottom: .6rem; }
     .pd-title { font-family: var(--font); font-weight: 800; font-size: clamp(1.4rem,3vw,2.2rem); letter-spacing: .04em; text-transform: uppercase; color: var(--title); }
+    /* relocation city picker */
+    .pd-relocation-row {
+      display: flex; align-items: center; gap: .75rem; flex-wrap: wrap;
+      margin-bottom: 2.4rem;
+    }
+    .pd-relocation-label {
+      font-size: .52rem; letter-spacing: .2em; text-transform: uppercase; color: var(--muted-lt);
+    }
+    .pd-relocation-pill {
+      display: inline-flex; align-items: center; gap: .5rem;
+      font-size: .6rem; letter-spacing: .12em; text-transform: uppercase;
+      color: var(--dark); background: #F5F3F0;
+      border: 1px solid var(--stroke-mid); border-radius: 100px;
+      padding: 5px 14px;
+    }
+    .pd-relocation-pill-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--stroke-mid); flex-shrink: 0; }
+    .pd-relocation-pill.set .pd-relocation-pill-dot { background: #85C8FF; }
+    .pd-relocation-none { font-size: .58rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted-lt); }
+    .pd-relocation-change-btn {
+      font-family: var(--font); font-size: .52rem; letter-spacing: .14em; text-transform: uppercase;
+      color: var(--muted); background: none; border: 1px solid var(--stroke);
+      border-radius: 100px; padding: 4px 12px; cursor: pointer;
+      transition: background .15s, color .15s;
+    }
+    .pd-relocation-change-btn:hover { background: #F5F3F0; color: var(--dark); }
+    .pd-city-picker-wrap {
+      position: relative; display: none;
+    }
+    .pd-city-picker-wrap.open { display: block; }
+    .pd-city-picker-input {
+      font-family: var(--font); font-size: .68rem; letter-spacing: .06em; text-transform: uppercase;
+      color: var(--dark); background: #fff;
+      border: 1.5px solid var(--stroke-mid); border-radius: 100px;
+      padding: 7px 18px; outline: none; width: 200px;
+      transition: border-color .2s;
+    }
+    .pd-city-picker-input:focus { border-color: var(--dark); }
+    .pd-city-dropdown {
+      position: absolute; top: calc(100% + 6px); left: 0;
+      background: #fff; border: 1.5px solid var(--stroke); border-radius: 14px;
+      box-shadow: 0 8px 24px rgba(0,0,0,.1); z-index: 50;
+      min-width: 200px; max-height: 220px; overflow-y: auto; display: none;
+    }
+    .pd-city-dropdown.open { display: block; }
+    .pd-city-option {
+      font-family: var(--font); font-size: .62rem; letter-spacing: .1em; text-transform: uppercase;
+      color: var(--dark); padding: .65rem 1.1rem; cursor: pointer;
+      transition: background .12s;
+    }
+    .pd-city-option:hover { background: #F5F3F0; }
+    .pd-city-option.active { background: #F0EDE8; font-weight: 700; }
     .pd-section { width: 100%; max-width: 700px; margin-bottom: 3rem; }
     .pd-section-label {
       font-size: .54rem; letter-spacing: .22em; text-transform: uppercase;
@@ -671,9 +750,23 @@
     .pd-section-label::after { content: ''; flex: 1; height: 1px; background: var(--stroke); }
     /* mission progress card */
     .pd-mission-card {
-      background: linear-gradient(135deg, #FDF0F9 0%, #F0F4FF 100%);
-      border: 1px solid #E8B4DC; border-radius: 20px;
+      background: linear-gradient(135deg, #F9F8F6 0%, #F2F0ED 100%);
+      border: 1px solid #E4E0DC; border-radius: 20px;
       padding: 1.8rem 2rem;
+    }
+    .pd-mission-meta {
+      display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
+      margin-bottom: 1.2rem;
+    }
+    .pd-mission-date {
+      font-size: .52rem; letter-spacing: .18em; text-transform: uppercase;
+      color: var(--muted-lt);
+    }
+    .pd-mission-city {
+      display: inline-flex; align-items: center; gap: .4rem;
+      font-size: .52rem; letter-spacing: .16em; text-transform: uppercase;
+      color: var(--muted); background: #fff;
+      border: 1px solid var(--stroke); border-radius: 100px; padding: 2px 10px;
     }
     .pd-mission-title {
       font-family: var(--font); font-weight: 700;
@@ -683,7 +776,7 @@
     .pd-mission-hint { font-size: .6rem; letter-spacing: .08em; color: var(--muted); line-height: 1.7; margin-bottom: 1.4rem; }
     .pd-streak { display: flex; align-items: center; gap: .5rem; font-size: .54rem; letter-spacing: .16em; text-transform: uppercase; color: var(--muted-lt); }
     .pd-streak-pip { width: 10px; height: 10px; border-radius: 50%; background: var(--stroke); }
-    .pd-streak-pip.done { background: #D490C8; }
+    .pd-streak-pip.done { background: var(--stroke-mid); }
     .pd-streak-label { font-size: .52rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted-lt); margin-left: .4rem; }
     /* sound collection grid */
     .pd-sounds-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem; width: 100%; }
@@ -704,8 +797,40 @@
       color: var(--title); line-height: 1.4;
     }
     .pd-empty { font-size: .62rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted-lt); }
+    .pd-sound-play-btn {
+      width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      background: #fff; border: 1.5px solid #FFB3C6; color: #FF78A0;
+      font-size: .65rem; cursor: pointer;
+      transition: background .15s, transform .1s, border-color .15s;
+    }
+    .pd-sound-play-btn:hover { background: #FFF0F4; border-color: #FF9EB0; transform: scale(1.08); }
+    .pd-sound-play-btn.playing { background: #FFF0F4; border-color: #FF78A0; }
+    .pd-sound-play-btn:disabled { opacity: .35; cursor: default; transform: none; }
+    .pd-recorded-list { display: flex; flex-direction: column; gap: .75rem; width: 100%; }
+    .pd-recorded-item {
+      display: flex; align-items: center; gap: 1rem;
+      padding: 1rem 1.2rem; border-radius: 14px;
+      background: #FFF5F7; border: 1px solid #FFB3C6;
+    }
+    .pd-recorded-cover {
+      width: 46px; height: 46px; border-radius: 10px; object-fit: cover;
+      border: 1px solid var(--stroke); flex-shrink: 0;
+    }
+    .pd-recorded-cover-placeholder {
+      width: 46px; height: 46px; border-radius: 10px; flex-shrink: 0;
+      background: #FFE4EC; display: flex; align-items: center;
+      justify-content: center; font-size: 1.2rem;
+    }
+    .pd-recorded-info { flex: 1; display: flex; flex-direction: column; gap: .3rem; min-width: 0; }
+    .pd-recorded-name {
+      font-family: var(--font); font-weight: 700; font-size: .68rem;
+      letter-spacing: .06em; text-transform: uppercase; color: var(--title);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .pd-recorded-meta { font-size: .52rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted-lt); }
     .pd-progress-bar-wrap { width: 100%; background: var(--stroke); border-radius: 100px; height: 6px; margin-top: .8rem; overflow: hidden; }
-    .pd-progress-bar { height: 100%; border-radius: 100px; background: linear-gradient(90deg, #D490C8, #B066A8); transition: width .6s ease; }
+    .pd-progress-bar { height: 100%; border-radius: 100px; background: linear-gradient(90deg, #C8C4BE, #A8A4A0); transition: width .6s ease; }
     .pd-progress-label { font-size: .52rem; letter-spacing: .14em; text-transform: uppercase; color: var(--muted-lt); margin-top: .4rem; }
 
     /* ─── SOUND BOOK SCREEN ─── */
@@ -714,9 +839,8 @@
       padding: 100px 5vw 6rem; position: relative; z-index: 1;
       animation: fadeUp .6s ease forwards;
     }
-    .soundbook-header { width: 100%; padding-bottom: 1.6rem; margin-bottom: 0; }
-    .soundbook-header h2 { font-family: var(--font); font-weight: 700; font-size: clamp(1.4rem,3vw,2.2rem); letter-spacing: .04em; text-transform: uppercase; color: var(--title); margin-bottom: .4rem; }
-    .soundbook-header p { font-size: .6rem; letter-spacing: .16em; text-transform: uppercase; color: var(--muted-lt); }
+    .soundbook-header { width: 100%; margin-bottom: 2.8rem; }
+    .soundbook-header h2 { font-family: var(--font); font-weight: 800; font-size: clamp(1.4rem,3vw,2.2rem); letter-spacing: .04em; text-transform: uppercase; color: var(--title); margin: .6rem 0 .5rem; }
 
     /* tabs */
     .soundbook-tabs { display: flex; gap: .5rem; margin: 1.6rem 0 2.5rem; width: 100%; border-bottom: 1px solid var(--stroke); padding-bottom: 0; }
@@ -1025,6 +1149,116 @@
 
     @keyframes fadeUp   { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
     @keyframes fadeDown { from{opacity:0;transform:translateY(-8px)}  to{opacity:1;transform:translateY(0)} }
+
+    /* ─── RESPONSIVE ─── */
+
+    /* Tablet: 481px – 900px */
+    @media (max-width: 900px) {
+      nav { padding: 0 1.4rem; }
+      .shapes-toggle { display: none; }
+
+      #hero,
+      #type-screen { padding: 90px 1.5rem 2.5rem; }
+
+      #cities-screen,
+      #sound-screen,
+      #soundbook-screen,
+      #daily-mission-screen,
+      #parent-dashboard-screen { padding: 90px 4vw 4rem; }
+
+      #regionsContainer { grid-template-columns: 1fr 1fr; gap: 2rem; }
+
+      .sound-cards-grid,
+      .facts-grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+
+      .dm-ask-columns { grid-template-columns: 1fr; gap: 1.2rem; }
+      .dm-ask-response { max-height: 200px; }
+      .dm-card { max-width: 100%; }
+
+      .pd-section { max-width: 100%; }
+
+      .soundbook-saved-grid { grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); }
+      .relocation-sounds-grid,
+      .pd-sounds-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+
+      .rec-modal { padding: 2.4rem 2rem 2rem; }
+      .rec-timer { font-size: 3.8rem; }
+    }
+
+    /* Mobile: ≤ 600px */
+    @media (max-width: 600px) {
+      nav {
+        padding: 0 1rem;
+        grid-template-columns: 1fr auto;
+      }
+      .nav-center { display: none; }
+
+      #hero,
+      #type-screen { padding: 80px 1.2rem 2rem; }
+
+      #cities-screen,
+      #sound-screen,
+      #soundbook-screen,
+      #daily-mission-screen,
+      #parent-dashboard-screen { padding: 80px 1.2rem 3rem; }
+
+      h1 { font-size: clamp(1.5rem, 7vw, 2.6rem); }
+
+      #regionsContainer { grid-template-columns: 1fr; gap: 1.6rem; }
+      .city-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
+
+      .sound-cards-grid,
+      .facts-grid { grid-template-columns: 1fr; }
+
+      .sound-city-name { font-size: clamp(1.8rem, 8vw, 3rem); }
+      .sound-refresh-row { flex-wrap: wrap; gap: .6rem; }
+      .sound-refresh-row > div { flex-wrap: wrap; }
+
+      .welcome-card { padding: 2rem 1.4rem 1.8rem; }
+      .welcome-group { padding: 1rem; }
+      .btn-mode-child, .btn-mode-parent { height: 80px; }
+
+      .dm-card { padding: 1.6rem 1.4rem; }
+      .dm-ask-columns { grid-template-columns: 1fr; }
+      .dm-ask { padding: 1.4rem; }
+
+      .soundbook-saved-grid { grid-template-columns: repeat(2, 1fr); gap: .75rem; }
+      .relocation-sounds-grid,
+      .pd-sounds-grid { grid-template-columns: repeat(2, 1fr); gap: .75rem; }
+
+      .soundbook-tabs { flex-wrap: wrap; }
+
+      .rec-modal { padding: 1.8rem 1.2rem 1.6rem; width: min(360px, 95vw); }
+      .rec-timer { font-size: 3rem; margin-bottom: 1.4rem; }
+      .rec-main-btn { width: 72px; height: 72px; font-size: 1.4rem; }
+      .rm-btn { height: 44px; font-size: .6rem; }
+      .rec-secondary-row { gap: .6rem; }
+
+      footer { padding: 1rem; }
+      .city-tags { flex-wrap: wrap; gap: .4rem; }
+    }
+
+    /* Small phones: ≤ 380px */
+    @media (max-width: 380px) {
+      nav { height: 54px; }
+      #hero, #type-screen,
+      #cities-screen, #sound-screen,
+      #soundbook-screen, #daily-mission-screen,
+      #parent-dashboard-screen { padding-top: 68px; }
+
+      .nav-logo { font-size: .76rem; }
+      .nav-link-btn { padding: 6px 12px; font-size: .58rem; }
+
+      .welcome-card { padding: 1.6rem 1rem 1.4rem; border-radius: 20px; }
+      .btn-mode-child, .btn-mode-parent { height: 68px; }
+
+      .soundbook-saved-grid,
+      .relocation-sounds-grid,
+      .pd-sounds-grid { grid-template-columns: repeat(2, 1fr); gap: .5rem; }
+
+      .rec-modal { padding: 1.4rem 1rem 1.4rem; }
+      .rec-timer { font-size: 2.4rem; }
+    }
   </style>
 </head>
 <body>
@@ -1265,9 +1499,24 @@
       <span class="sound-back-arrow">←</span> Back
     </button>
     <div class="soundbook-header">
+      <div class="dm-eyebrow">My Collection</div>
       <h2>My Sound Book</h2>
-      <p>Your personal collection of city sounds</p>
+      <div class="dm-date">Your personal collection of city sounds</div>
     </div>
+
+    <div class="pd-relocation-row">
+      <span class="pd-relocation-label">Moving to</span>
+      <span class="pd-relocation-pill" id="sbRelocationPill">
+        <span class="pd-relocation-pill-dot"></span>
+        <span id="sbRelocationPillText">No city set</span>
+      </span>
+      <button class="pd-relocation-change-btn" id="sbRelocationChangeBtn">Change</button>
+      <div class="pd-city-picker-wrap" id="sbCityPickerWrap">
+        <input class="pd-city-picker-input" id="sbCityPickerInput" placeholder="Type a city…" autocomplete="off" spellcheck="false" />
+        <div class="pd-city-dropdown" id="sbCityDropdown"></div>
+      </div>
+    </div>
+
     <div class="soundbook-tabs">
       <button class="soundbook-tab active" data-tab="saved">Saved Sounds</button>
       <button class="soundbook-tab" data-tab="recorded">Recorded Sounds</button>
@@ -1284,6 +1533,20 @@
       <div class="dm-title">Today's Challenge</div>
       <div class="dm-date" id="dmDate"></div>
     </div>
+
+    <div class="pd-relocation-row">
+      <span class="pd-relocation-label">Moving to</span>
+      <span class="pd-relocation-pill" id="dmRelocationPill">
+        <span class="pd-relocation-pill-dot"></span>
+        <span id="dmRelocationPillText">No city set</span>
+      </span>
+      <button class="pd-relocation-change-btn" id="dmRelocationChangeBtn">Change</button>
+      <div class="pd-city-picker-wrap" id="dmCityPickerWrap">
+        <input class="pd-city-picker-input" id="dmCityPickerInput" placeholder="Type a city…" autocomplete="off" spellcheck="false" />
+        <div class="pd-city-dropdown" id="dmCityDropdown"></div>
+      </div>
+    </div>
+
     <div class="dm-card">
       <div class="dm-card-deco">🎶</div>
       <div class="dm-card-tag">⌂ Sound Explorer</div>
@@ -1295,14 +1558,34 @@
       </div>
     </div>
     <div class="dm-streak" id="dmStreak"></div>
-    <div class="dm-ask" id="dmAsk" style="display:none;">
-      <div class="dm-ask-label">Explore <span id="dmAskCityName"></span></div>
-      <div class="dm-ask-chips" id="dmAskChips"></div>
-      <div class="dm-ask-input-row">
-        <input class="dm-ask-input" id="dmAskInput" placeholder="Ask anything about this city…" />
-        <button class="dm-ask-send" id="dmAskSend">→</button>
+    <div class="dm-ask" id="dmAsk">
+      <div class="dm-ask-label">Explore what's near your home</div>
+      <div class="dm-ask-columns">
+
+        <div class="dm-ask-left">
+          <div class="dm-ask-section-label">Location</div>
+          <div class="dm-ask-address">
+            <input class="dm-ask-city-input" id="dmAskCityInput" placeholder="City, e.g. New York" />
+            <input class="dm-ask-city-input" id="dmAskStreetInput" placeholder="Street, e.g. 123 W 14th St" />
+            <input class="dm-ask-city-input" id="dmAskAptInput" placeholder="Building or neighbourhood, e.g. Chelsea" />
+          </div>
+
+          <div class="dm-ask-section-label">Quick questions</div>
+          <div class="dm-ask-chips" id="dmAskChips"></div>
+
+          <div class="dm-ask-section-label">Ask your own</div>
+          <div class="dm-ask-input-row">
+            <input class="dm-ask-input" id="dmAskInput" placeholder="What do you want to know?" />
+            <button class="dm-ask-send" id="dmAskSend">→</button>
+          </div>
+        </div>
+
+        <div class="dm-ask-right">
+          <div class="dm-ask-section-label">Answer</div>
+          <div class="dm-ask-response" id="dmAskResponse">Ask something to get started…</div>
+        </div>
+
       </div>
-      <div class="dm-ask-response" id="dmAskResponse" style="display:none;"></div>
     </div>
   </section>
 
@@ -1313,9 +1596,26 @@
       <div class="pd-title" id="pdTitle">My Dashboard</div>
     </div>
 
+    <div class="pd-relocation-row">
+      <span class="pd-relocation-label">Moving to</span>
+      <span class="pd-relocation-pill" id="pdRelocationPill">
+        <span class="pd-relocation-pill-dot"></span>
+        <span id="pdRelocationPillText">No city set</span>
+      </span>
+      <button class="pd-relocation-change-btn" id="pdRelocationChangeBtn">Change</button>
+      <div class="pd-city-picker-wrap" id="pdCityPickerWrap">
+        <input class="pd-city-picker-input" id="pdCityPickerInput" placeholder="Type a city…" autocomplete="off" spellcheck="false" />
+        <div class="pd-city-dropdown" id="pdCityDropdown"></div>
+      </div>
+    </div>
+
     <div class="pd-section">
       <div class="pd-section-label">Today's Mission</div>
       <div class="pd-mission-card">
+        <div class="pd-mission-meta">
+          <span class="pd-mission-date" id="pdMissionDate"></span>
+          <span class="pd-mission-city" id="pdMissionCity" style="display:none">⌂ <span id="pdMissionCityName"></span></span>
+        </div>
         <div class="pd-mission-title" id="pdMissionText"></div>
         <div class="pd-mission-hint" id="pdMissionHint"></div>
         <div class="pd-streak" id="pdStreak"></div>
@@ -1329,6 +1629,11 @@
     <div class="pd-section">
       <div class="pd-section-label">Child's Sound Collection</div>
       <div id="pdSoundsGrid" class="pd-sounds-grid"></div>
+    </div>
+
+    <div class="pd-section">
+      <div class="pd-section-label">Recorded Sounds</div>
+      <div id="pdRecordedList" class="pd-recorded-list"></div>
     </div>
   </section>
 
@@ -2294,6 +2599,7 @@
   /* ── sound book ── */
   document.getElementById('soundBookBtn').addEventListener('click', () => {
     renderSoundBook();
+    updateRelocationPills();
     showScreen('soundbook-screen');
     document.getElementById('shapesLayer').classList.remove('hidden');
     shapesToggle.classList.add('on');
@@ -2415,34 +2721,34 @@
 
   /* ── daily mission ── */
   const dailyMissions = [
-    { text: 'Record the sound of your morning commute', hint: 'Step outside and capture the rhythm of how your neighborhood wakes up — buses, birds, footsteps.', nearbyType: 'transit_station', nearbyLabel: 'Transit stops nearby' },
-    { text: 'Find a street musician and record 10 seconds', hint: 'Listen for buskers in a market, station, or park. Their sound tells the story of the city.', nearbyType: 'subway_station', nearbyLabel: 'Stations nearby' },
-    { text: 'Record the sound of a local coffee shop', hint: 'Espresso machines, chatter, cups clinking — the urban soundtrack of a slow morning.', nearbyType: 'cafe', nearbyLabel: 'Cafes nearby' },
-    { text: 'Capture the sound of your nearest park', hint: 'Wind through leaves, children playing, or birds calling. Nature hides in every city.', nearbyType: 'park', nearbyLabel: 'Parks nearby' },
-    { text: 'Record an intersection at peak hour', hint: 'Stand at a busy crossing and capture the layered noise of the city in full motion.', nearbyType: 'transit_station', nearbyLabel: 'Busy spots nearby' },
-    { text: 'Find the quietest spot near you and record it', hint: 'Even silence has a texture — distant hum, rustling, the occasional footstep.', nearbyType: 'park', nearbyLabel: 'Quiet spots nearby' },
-    { text: 'Record the sound of a local food market', hint: 'Vendors calling out, sizzling pans, the shuffle of bags — a market is alive with sound.', nearbyType: 'grocery_or_supermarket', nearbyLabel: 'Markets nearby' },
-    { text: 'Capture rain or wind in your neighborhood', hint: 'Weather shapes the sonic identity of a place. Record it while it lasts.', nearbyType: 'park', nearbyLabel: 'Open spaces nearby' },
-    { text: 'Record a moving train or subway', hint: 'The screech of the tracks, the rush of air, the closing doors — transit is pure city sound.', nearbyType: 'train_station', nearbyLabel: 'Train stations nearby' },
-    { text: 'Find a water feature and record it', hint: 'Fountains, rivers, or even a rain drain. Water creates a calming constant in urban life.', nearbyType: 'park', nearbyLabel: 'Parks & plazas nearby' },
-    { text: 'Record children playing nearby', hint: 'A schoolyard, playground, or sidewalk — the sound of play reveals the life of a neighborhood.', nearbyType: 'park', nearbyLabel: 'Parks nearby' },
-    { text: 'Capture the sound of a construction site', hint: 'Hammers, drills, reversing trucks — cities are always being remade.', nearbyType: 'point_of_interest', nearbyLabel: 'Active areas nearby' },
-    { text: 'Record someone speaking a local language or accent', hint: 'With permission, capture a few words. Dialect is part of a city\'s sonic fingerprint.', nearbyType: 'shopping_mall', nearbyLabel: 'Busy places nearby' },
-    { text: 'Find a bell, clock, or chime and record it', hint: 'Church bells, school bells, city clocks — time sounds different in every place.', nearbyType: 'church', nearbyLabel: 'Churches nearby' },
-    { text: 'Record the sound inside a library or museum', hint: 'Hushed voices, echoing footsteps, the rustle of pages — culture has its own acoustics.', nearbyType: 'museum', nearbyLabel: 'Museums & libraries nearby' },
-    { text: 'Capture the sound of a local sports moment', hint: 'A crowd cheer, a referee\'s whistle, a ball bouncing — sport pulses through city life.', nearbyType: 'stadium', nearbyLabel: 'Sports venues nearby' },
-    { text: 'Record the sound of your front door or building entrance', hint: 'Buzzer, creak, footsteps on tile — home has a sound. What does yours sound like?', nearbyType: 'point_of_interest', nearbyLabel: 'Landmarks nearby' },
-    { text: 'Find a restaurant and record its kitchen sounds', hint: 'Even from outside, you can hear the sizzle, the orders, the rhythm of a working kitchen.', nearbyType: 'restaurant', nearbyLabel: 'Restaurants nearby' },
-    { text: 'Record an animal sound in your city', hint: 'Pigeons, dogs, cats, squirrels — urban wildlife has its own presence.', nearbyType: 'zoo', nearbyLabel: 'Parks & zoos nearby' },
-    { text: 'Capture the sound of a crosswalk signal', hint: 'Beeping, chirping, or talking — pedestrian signals vary wildly from city to city.', nearbyType: 'transit_station', nearbyLabel: 'Crossings nearby' },
-    { text: 'Record the echo inside a tunnel or underpass', hint: 'Architecture changes how sound moves. Find a hollow space and listen.', nearbyType: 'subway_station', nearbyLabel: 'Subway stations nearby' },
-    { text: 'Capture the sound of an evening street', hint: 'When the day slows down, the city reveals a different voice — softer, longer, more distant.', nearbyType: 'bar', nearbyLabel: 'Evening spots nearby' },
-    { text: 'Record a neighbour\'s music drifting through the window', hint: 'The accidental soundtrack of shared walls and open windows is uniquely urban.', nearbyType: 'point_of_interest', nearbyLabel: 'Points of interest nearby' },
-    { text: 'Find a hardware or corner store and capture its sounds', hint: 'Shelves restocking, a door chime, distant radio — small shops have character.', nearbyType: 'store', nearbyLabel: 'Stores nearby' },
-    { text: 'Record a crowd waiting — a bus stop, queue, or platform', hint: 'Collective patience has a sound: shuffling feet, quiet sighs, muffled conversations.', nearbyType: 'bus_station', nearbyLabel: 'Bus stops nearby' },
-    { text: 'Capture the sound of a city at night', hint: 'After midnight, the city doesn\'t go silent — it just changes frequency.', nearbyType: 'night_club', nearbyLabel: 'Night spots nearby' },
-    { text: 'Record the sound of your window on a busy day', hint: 'Street noise filtered through glass takes on a new texture. Press record and listen.', nearbyType: 'point_of_interest', nearbyLabel: 'Busy spots nearby' },
-    { text: 'Find a neighbourhood you haven\'t explored and record it', hint: 'Every block has its own sonic personality. Walk somewhere new today.', nearbyType: 'neighborhood', nearbyLabel: 'Places to explore nearby' },
+    { text: 'Record the sound of your morning commute', hint: 'Step outside and capture the rhythm of how your neighborhood wakes up — buses, birds, footsteps.', nearbyType: 'transit_station', nearbyLabel: 'Transit stops nearby', nearbyQ: 'Any transit stops or bus stations nearby?' },
+    { text: 'Find a street musician and record 10 seconds', hint: 'Listen for buskers in a market, station, or park. Their sound tells the story of the city.', nearbyType: 'subway_station', nearbyLabel: 'Stations nearby', nearbyQ: 'Any subway stations or busy pedestrian areas nearby?' },
+    { text: 'Record the sound of a local coffee shop', hint: 'Espresso machines, chatter, cups clinking — the urban soundtrack of a slow morning.', nearbyType: 'cafe', nearbyLabel: 'Cafes nearby', nearbyQ: 'Any coffee shops or cafes nearby?' },
+    { text: 'Capture the sound of your nearest park', hint: 'Wind through leaves, children playing, or birds calling. Nature hides in every city.', nearbyType: 'park', nearbyLabel: 'Parks nearby', nearbyQ: 'Any parks or green spaces nearby?' },
+    { text: 'Record an intersection at peak hour', hint: 'Stand at a busy crossing and capture the layered noise of the city in full motion.', nearbyType: 'transit_station', nearbyLabel: 'Busy spots nearby', nearbyQ: 'Any busy intersections or crossings nearby?' },
+    { text: 'Find the quietest spot near you and record it', hint: 'Even silence has a texture — distant hum, rustling, the occasional footstep.', nearbyType: 'park', nearbyLabel: 'Quiet spots nearby', nearbyQ: 'Any quiet parks or peaceful spots nearby?' },
+    { text: 'Record the sound of a local food market', hint: 'Vendors calling out, sizzling pans, the shuffle of bags — a market is alive with sound.', nearbyType: 'grocery_or_supermarket', nearbyLabel: 'Markets nearby', nearbyQ: 'Any food markets or street markets nearby?' },
+    { text: 'Capture rain or wind in your neighborhood', hint: 'Weather shapes the sonic identity of a place. Record it while it lasts.', nearbyType: 'park', nearbyLabel: 'Open spaces nearby', nearbyQ: 'Any open spaces or plazas nearby?' },
+    { text: 'Record a moving train or subway', hint: 'The screech of the tracks, the rush of air, the closing doors — transit is pure city sound.', nearbyType: 'train_station', nearbyLabel: 'Train stations nearby', nearbyQ: 'Any train or subway stations nearby?' },
+    { text: 'Find a water feature and record it', hint: 'Fountains, rivers, or even a rain drain. Water creates a calming constant in urban life.', nearbyType: 'park', nearbyLabel: 'Parks & plazas nearby', nearbyQ: 'Any fountains, rivers, or water features nearby?' },
+    { text: 'Record children playing nearby', hint: 'A schoolyard, playground, or sidewalk — the sound of play reveals the life of a neighborhood.', nearbyType: 'park', nearbyLabel: 'Parks nearby', nearbyQ: 'Any playgrounds or schoolyards nearby?' },
+    { text: 'Capture the sound of a construction site', hint: 'Hammers, drills, reversing trucks — cities are always being remade.', nearbyType: 'point_of_interest', nearbyLabel: 'Active areas nearby', nearbyQ: 'Any construction sites nearby?' },
+    { text: 'Record someone speaking a local language or accent', hint: 'With permission, capture a few words. Dialect is part of a city\'s sonic fingerprint.', nearbyType: 'shopping_mall', nearbyLabel: 'Busy places nearby', nearbyQ: 'Any busy shopping areas or markets nearby?' },
+    { text: 'Find a bell, clock, or chime and record it', hint: 'Church bells, school bells, city clocks — time sounds different in every place.', nearbyType: 'church', nearbyLabel: 'Churches nearby', nearbyQ: 'Any churches, clock towers, or chapels nearby?' },
+    { text: 'Record the sound inside a library or museum', hint: 'Hushed voices, echoing footsteps, the rustle of pages — culture has its own acoustics.', nearbyType: 'museum', nearbyLabel: 'Museums & libraries nearby', nearbyQ: 'Any museums or libraries nearby?' },
+    { text: 'Capture the sound of a local sports moment', hint: 'A crowd cheer, a referee\'s whistle, a ball bouncing — sport pulses through city life.', nearbyType: 'stadium', nearbyLabel: 'Sports venues nearby', nearbyQ: 'Any sports venues or stadiums nearby?' },
+    { text: 'Record the sound of your front door or building entrance', hint: 'Buzzer, creak, footsteps on tile — home has a sound. What does yours sound like?', nearbyType: 'point_of_interest', nearbyLabel: 'Landmarks nearby', nearbyQ: 'Any interesting building entrances or landmarks nearby?' },
+    { text: 'Find a restaurant and record its kitchen sounds', hint: 'Even from outside, you can hear the sizzle, the orders, the rhythm of a working kitchen.', nearbyType: 'restaurant', nearbyLabel: 'Restaurants nearby', nearbyQ: 'Any restaurants nearby?' },
+    { text: 'Record an animal sound in your city', hint: 'Pigeons, dogs, cats, squirrels — urban wildlife has its own presence.', nearbyType: 'zoo', nearbyLabel: 'Parks & zoos nearby', nearbyQ: 'Any parks, zoos, or nature spots nearby?' },
+    { text: 'Capture the sound of a crosswalk signal', hint: 'Beeping, chirping, or talking — pedestrian signals vary wildly from city to city.', nearbyType: 'transit_station', nearbyLabel: 'Crossings nearby', nearbyQ: 'Any busy crosswalks or pedestrian crossings nearby?' },
+    { text: 'Record the echo inside a tunnel or underpass', hint: 'Architecture changes how sound moves. Find a hollow space and listen.', nearbyType: 'subway_station', nearbyLabel: 'Subway stations nearby', nearbyQ: 'Any tunnels, underpasses, or subways nearby?' },
+    { text: 'Capture the sound of an evening street', hint: 'When the day slows down, the city reveals a different voice — softer, longer, more distant.', nearbyType: 'bar', nearbyLabel: 'Evening spots nearby', nearbyQ: 'Any bars, restaurants, or evening spots nearby?' },
+    { text: 'Record a neighbour\'s music drifting through the window', hint: 'The accidental soundtrack of shared walls and open windows is uniquely urban.', nearbyType: 'point_of_interest', nearbyLabel: 'Points of interest nearby', nearbyQ: 'What is the neighbourhood like around here?' },
+    { text: 'Find a hardware or corner store and capture its sounds', hint: 'Shelves restocking, a door chime, distant radio — small shops have character.', nearbyType: 'store', nearbyLabel: 'Stores nearby', nearbyQ: 'Any corner stores or hardware shops nearby?' },
+    { text: 'Record a crowd waiting — a bus stop, queue, or platform', hint: 'Collective patience has a sound: shuffling feet, quiet sighs, muffled conversations.', nearbyType: 'bus_station', nearbyLabel: 'Bus stops nearby', nearbyQ: 'Any bus stops or busy waiting areas nearby?' },
+    { text: 'Capture the sound of a city at night', hint: 'After midnight, the city doesn\'t go silent — it just changes frequency.', nearbyType: 'night_club', nearbyLabel: 'Night spots nearby', nearbyQ: 'Any nightlife spots or late-night areas nearby?' },
+    { text: 'Record the sound of your window on a busy day', hint: 'Street noise filtered through glass takes on a new texture. Press record and listen.', nearbyType: 'point_of_interest', nearbyLabel: 'Busy spots nearby', nearbyQ: 'Any busy streets or high-traffic areas nearby?' },
+    { text: 'Find a neighbourhood you haven\'t explored and record it', hint: 'Every block has its own sonic personality. Walk somewhere new today.', nearbyType: 'neighborhood', nearbyLabel: 'Places to explore nearby', nearbyQ: 'Any interesting neighbourhoods to explore nearby?' },
   ];
 
   function getDailyMission() {
@@ -2451,31 +2757,35 @@
     return dailyMissions[seed % dailyMissions.length];
   }
 
-  const GEMINI_KEY = 'AIzaSyBIgotFY_NwqayV3I28rPuVdjUFPRGL1Ik';
+  const DEEPSEEK_KEY = 'sk-0937e6bdc7ed443bb217402f374329ef';
 
   async function askGemini(question) {
     const res = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-04-17:generateContent`,
+      `https://api.deepseek.com/chat/completions`,
       {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'x-goog-api-key': GEMINI_KEY
+          'Authorization': `Bearer ${DEEPSEEK_KEY}`
         },
-        body: JSON.stringify({ contents: [{ parts: [{ text: question }] }] })
+        body: JSON.stringify({
+          model: 'deepseek-chat',
+          messages: [{ role: 'user', content: question }]
+        })
       }
     );
     const data = await res.json();
     if (!res.ok) return `Error ${res.status}: ${data?.error?.message ?? 'Unknown error'}`;
-    return data.candidates?.[0]?.content?.parts?.[0]?.text ?? null;
+    return data.choices?.[0]?.message?.content ?? null;
   }
 
   const DM_CITY_CHIPS = [
-    'Are there any parks in {city}?',
-    'Best coffee shops in {city}?',
-    'Family-friendly neighbourhoods in {city}?',
-    'What is apartment rent like in {city}?',
-    'Public transport options in {city}?',
+    'Any parks or green spaces nearby?',
+    'Best coffee shops walking distance?',
+    'Grocery stores nearby?',
+    'Subway or bus stops nearby?',
+    'Any good restaurants nearby?',
+    'What is the neighbourhood like?',
   ];
 
   function renderDailyMission() {
@@ -2494,18 +2804,31 @@
       streak.appendChild(pip);
     }
 
-    const askWrap = document.getElementById('dmAsk');
-    if (!relocationCity) { askWrap.style.display = 'none'; return; }
+    document.getElementById('dmAskCityInput').value = relocationCity || '';
+    document.getElementById('dmAskStreetInput').value = '';
+    document.getElementById('dmAskAptInput').value = '';
+    _currentNearbyQ = mission.nearbyQ || null;
+    renderCityChips();
 
-    askWrap.style.display = 'block';
-    document.getElementById('dmAskCityName').textContent = relocationCity;
+    const respEl = document.getElementById('dmAskResponse');
+    respEl.className = 'dm-ask-response';
+    respEl.textContent = 'Ask something to get started…';
+    document.getElementById('dmAskInput').value = '';
+  }
 
+  let _currentNearbyQ = null;
+
+  function renderCityChips() {
     const chipsEl = document.getElementById('dmAskChips');
     chipsEl.innerHTML = '';
-    DM_CITY_CHIPS.forEach(tpl => {
-      const q = tpl.replace('{city}', relocationCity);
+
+    const allChips = _currentNearbyQ
+      ? [{ text: _currentNearbyQ, highlight: true }, ...DM_CITY_CHIPS.map(t => ({ text: t, highlight: false }))]
+      : DM_CITY_CHIPS.map(t => ({ text: t, highlight: false }));
+
+    allChips.forEach(({ text: q, highlight }) => {
       const chip = document.createElement('button');
-      chip.className = 'dm-ask-chip';
+      chip.className = 'dm-ask-chip' + (highlight ? ' dm-ask-chip-highlight' : '');
       chip.textContent = q;
       chip.addEventListener('click', () => {
         document.getElementById('dmAskInput').value = q;
@@ -2513,12 +2836,11 @@
       });
       chipsEl.appendChild(chip);
     });
-
-    const respEl = document.getElementById('dmAskResponse');
-    respEl.style.display = 'none';
-    respEl.textContent = '';
-    document.getElementById('dmAskInput').value = '';
   }
+
+  ['dmAskCityInput', 'dmAskStreetInput', 'dmAskAptInput'].forEach(id => {
+    document.getElementById(id).addEventListener('input', () => renderCityChips());
+  });
 
   async function submitCityQuestion() {
     const input = document.getElementById('dmAskInput');
@@ -2526,13 +2848,25 @@
     const q = input.value.trim();
     if (!q) return;
 
+    const city   = document.getElementById('dmAskCityInput').value.trim();
+    const street = document.getElementById('dmAskStreetInput').value.trim();
+    const apt    = document.getElementById('dmAskAptInput').value.trim();
+
+    const parts = ['I\'m living'];
+    if (street) parts.push('at ' + street);
+    if (apt)    parts.push(apt);
+    if (city)   parts.push(city);
+    const prefix = parts.length > 1 ? parts.join(', ') + '. ' : '';
+
+    const fullPrompt = prefix + q;
+
     respEl.style.display = 'block';
     respEl.className = 'dm-ask-response dm-ask-loading';
     respEl.textContent = 'Thinking…';
 
-    const answer = await askGemini(q);
-    respEl.className = 'dm-ask-response';
-    respEl.textContent = answer ?? 'No response returned from Gemini.';
+    const answer = await askGemini(fullPrompt);
+    respEl.className = 'dm-ask-response has-answer';
+    respEl.textContent = answer ?? 'No response returned.';
   }
 
   document.getElementById('dmAskSend').addEventListener('click', submitCityQuestion);
@@ -2542,6 +2876,7 @@
 
   document.getElementById('dailyMissionBtn').addEventListener('click', () => {
     renderDailyMission();
+    updateRelocationPills();
     showScreen('daily-mission-screen');
     document.getElementById('shapesLayer').classList.remove('hidden');
     shapesToggle.classList.add('on');
@@ -2555,6 +2890,13 @@
     const mission = getDailyMission();
     document.getElementById('pdMissionText').textContent = mission.text;
     document.getElementById('pdMissionHint').textContent = mission.hint;
+
+    // date
+    const todayStr = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+    document.getElementById('pdMissionDate').textContent = todayStr;
+
+    // relocation city pill + mission card badge
+    updatePdRelocationPill();
 
     // streak pips
     const today = new Date();
@@ -2594,11 +2936,262 @@
       name.className = 'pd-sound-name';
       name.textContent = title;
 
+      const playBtn = document.createElement('button');
+      playBtn.className = 'pd-sound-play-btn';
+      playBtn.innerHTML = '▶';
+      playBtn.addEventListener('click', async () => {
+        if (currentAudio && currentCard === playBtn) {
+          stopAllAudio();
+          playBtn.innerHTML = '▶'; playBtn.classList.remove('playing');
+          return;
+        }
+        stopAllAudio();
+        document.querySelectorAll('.pd-sound-play-btn').forEach(b => { b.innerHTML = '▶'; b.classList.remove('playing'); });
+        playBtn.innerHTML = '…'; playBtn.disabled = true;
+        const soundObj = (citySounds[city] || []).find(s => s.title === title);
+        if (!soundObj) { playBtn.innerHTML = '▶'; playBtn.disabled = false; return; }
+        let url = previewCache[soundObj.file] || null;
+        if (!url) { url = await fetchFromFreesound(soundObj); if (url) previewCache[soundObj.file] = url; }
+        if (!url) { url = await fetchFromElevenLabs(soundObj); if (url) previewCache[soundObj.file] = url; }
+        playBtn.disabled = false;
+        if (!url) { playBtn.innerHTML = '▶'; return; }
+        const audio = new Audio(url);
+        audio.addEventListener('ended', () => { playBtn.innerHTML = '▶'; playBtn.classList.remove('playing'); currentAudio = null; currentCard = null; });
+        audio.play().catch(() => { playBtn.innerHTML = '▶'; });
+        playBtn.innerHTML = '■'; playBtn.classList.add('playing');
+        currentAudio = audio; currentCard = playBtn;
+      });
+
       card.appendChild(cityPill);
       card.appendChild(name);
+      card.appendChild(playBtn);
       grid.appendChild(card);
     });
+
+    // recorded sounds
+    const recList = document.getElementById('pdRecordedList');
+    recList.innerHTML = '';
+    if (recordedSoundsList.length === 0) {
+      recList.innerHTML = '<p class="pd-empty">No recordings yet.</p>';
+    } else {
+      recordedSoundsList.forEach(rec => {
+        const item = document.createElement('div');
+        item.className = 'pd-recorded-item';
+
+        if (rec.coverUrl) {
+          const img = document.createElement('img');
+          img.className = 'pd-recorded-cover';
+          img.src = rec.coverUrl; img.alt = '';
+          item.appendChild(img);
+        } else {
+          const ph = document.createElement('div');
+          ph.className = 'pd-recorded-cover-placeholder';
+          ph.textContent = '🎙';
+          item.appendChild(ph);
+        }
+
+        const info = document.createElement('div');
+        info.className = 'pd-recorded-info';
+        const rName = document.createElement('div');
+        rName.className = 'pd-recorded-name';
+        rName.textContent = rec.name;
+        const rMeta = document.createElement('div');
+        rMeta.className = 'pd-recorded-meta';
+        rMeta.textContent = [rec.date, rec.duration].filter(Boolean).join(' · ');
+        info.appendChild(rName);
+        info.appendChild(rMeta);
+        item.appendChild(info);
+
+        const playBtn = document.createElement('button');
+        playBtn.className = 'pd-sound-play-btn';
+        playBtn.innerHTML = '▶';
+        if (rec.audioUrl) {
+          playBtn.addEventListener('click', () => {
+            if (currentAudio && currentCard === playBtn) {
+              stopAllAudio(); playBtn.innerHTML = '▶'; playBtn.classList.remove('playing'); return;
+            }
+            stopAllAudio();
+            document.querySelectorAll('.pd-sound-play-btn').forEach(b => { b.innerHTML = '▶'; b.classList.remove('playing'); });
+            const audio = new Audio(rec.audioUrl);
+            audio.addEventListener('ended', () => { playBtn.innerHTML = '▶'; playBtn.classList.remove('playing'); currentAudio = null; currentCard = null; });
+            audio.play().catch(() => {});
+            playBtn.innerHTML = '■'; playBtn.classList.add('playing');
+            currentAudio = audio; currentCard = playBtn;
+          });
+        } else {
+          playBtn.disabled = true;
+        }
+        item.appendChild(playBtn);
+        recList.appendChild(item);
+      });
+    }
   }
+
+  /* ── parent dashboard city picker ── */
+  function updateRelocationPills() {
+    const label = relocationCity || 'No city set';
+    const isSet = !!relocationCity;
+    [
+      ['pdRelocationPill', 'pdRelocationPillText'],
+      ['dmRelocationPill', 'dmRelocationPillText'],
+      ['sbRelocationPill', 'sbRelocationPillText'],
+    ].forEach(([pillId, textId]) => {
+      const pill = document.getElementById(pillId);
+      const text = document.getElementById(textId);
+      text.textContent = label;
+      pill.classList.toggle('set', isSet);
+    });
+    const pdCityEl = document.getElementById('pdMissionCity');
+    if (relocationCity) {
+      document.getElementById('pdMissionCityName').textContent = relocationCity;
+      pdCityEl.style.display = 'inline-flex';
+    } else {
+      pdCityEl.style.display = 'none';
+    }
+  }
+  function updatePdRelocationPill() { updateRelocationPills(); }
+
+  const pdChangeBtn = document.getElementById('pdRelocationChangeBtn');
+  const pdPickerWrap = document.getElementById('pdCityPickerWrap');
+  const pdPickerInput = document.getElementById('pdCityPickerInput');
+  const pdDropdown = document.getElementById('pdCityDropdown');
+  const allCities = Object.keys(citySounds).sort();
+
+  function renderPdCityDropdown(filter) {
+    const q = filter.trim().toLowerCase();
+    const matches = q ? allCities.filter(c => c.toLowerCase().includes(q)) : allCities;
+    pdDropdown.innerHTML = '';
+    matches.forEach(city => {
+      const opt = document.createElement('div');
+      opt.className = 'pd-city-option' + (city === relocationCity ? ' active' : '');
+      opt.textContent = city;
+      opt.addEventListener('click', () => {
+        relocationCity = city;
+        relocationSounds = citySounds[city] || [];
+        localStorage.setItem('cs_relocation', city);
+        updatePdRelocationPill();
+        pdPickerWrap.classList.remove('open');
+        pdDropdown.classList.remove('open');
+        pdPickerInput.value = '';
+      });
+      pdDropdown.appendChild(opt);
+    });
+    pdDropdown.classList.toggle('open', matches.length > 0);
+  }
+
+  pdChangeBtn.addEventListener('click', () => {
+    const isOpen = pdPickerWrap.classList.contains('open');
+    if (isOpen) {
+      pdPickerWrap.classList.remove('open');
+      pdDropdown.classList.remove('open');
+    } else {
+      pdPickerWrap.classList.add('open');
+      renderPdCityDropdown('');
+      pdPickerInput.focus();
+    }
+  });
+
+  pdPickerInput.addEventListener('input', () => renderPdCityDropdown(pdPickerInput.value));
+
+  document.addEventListener('click', e => {
+    if (!pdPickerWrap.contains(e.target) && e.target !== pdChangeBtn) {
+      pdPickerWrap.classList.remove('open');
+      pdDropdown.classList.remove('open');
+    }
+    if (!dmPickerWrap.contains(e.target) && e.target !== dmChangeBtn) {
+      dmPickerWrap.classList.remove('open');
+      dmDropdown.classList.remove('open');
+    }
+    if (typeof sbPickerWrap !== 'undefined' && !sbPickerWrap.contains(e.target) && e.target !== sbChangeBtn) {
+      sbPickerWrap.classList.remove('open');
+      sbDropdown.classList.remove('open');
+    }
+  });
+
+  /* ── child daily mission city picker ── */
+  const dmChangeBtn   = document.getElementById('dmRelocationChangeBtn');
+  const dmPickerWrap  = document.getElementById('dmCityPickerWrap');
+  const dmPickerInput = document.getElementById('dmCityPickerInput');
+  const dmDropdown    = document.getElementById('dmCityDropdown');
+
+  function renderDmCityDropdown(filter) {
+    const q = filter.trim().toLowerCase();
+    const matches = q ? allCities.filter(c => c.toLowerCase().includes(q)) : allCities;
+    dmDropdown.innerHTML = '';
+    matches.forEach(city => {
+      const opt = document.createElement('div');
+      opt.className = 'pd-city-option' + (city === relocationCity ? ' active' : '');
+      opt.textContent = city;
+      opt.addEventListener('click', () => {
+        relocationCity = city;
+        relocationSounds = citySounds[city] || [];
+        localStorage.setItem('cs_relocation', city);
+        updateRelocationPills();
+        dmPickerWrap.classList.remove('open');
+        dmDropdown.classList.remove('open');
+        dmPickerInput.value = '';
+      });
+      dmDropdown.appendChild(opt);
+    });
+    dmDropdown.classList.toggle('open', matches.length > 0);
+  }
+
+  dmChangeBtn.addEventListener('click', () => {
+    const isOpen = dmPickerWrap.classList.contains('open');
+    if (isOpen) {
+      dmPickerWrap.classList.remove('open');
+      dmDropdown.classList.remove('open');
+    } else {
+      dmPickerWrap.classList.add('open');
+      renderDmCityDropdown('');
+      dmPickerInput.focus();
+    }
+  });
+
+  dmPickerInput.addEventListener('input', () => renderDmCityDropdown(dmPickerInput.value));
+
+  /* ── soundbook city picker ── */
+  const sbChangeBtn   = document.getElementById('sbRelocationChangeBtn');
+  const sbPickerWrap  = document.getElementById('sbCityPickerWrap');
+  const sbPickerInput = document.getElementById('sbCityPickerInput');
+  const sbDropdown    = document.getElementById('sbCityDropdown');
+
+  function renderSbCityDropdown(filter) {
+    const q = filter.trim().toLowerCase();
+    const matches = q ? allCities.filter(c => c.toLowerCase().includes(q)) : allCities;
+    sbDropdown.innerHTML = '';
+    matches.forEach(city => {
+      const opt = document.createElement('div');
+      opt.className = 'pd-city-option' + (city === relocationCity ? ' active' : '');
+      opt.textContent = city;
+      opt.addEventListener('click', () => {
+        relocationCity = city;
+        relocationSounds = citySounds[city] || [];
+        localStorage.setItem('cs_relocation', city);
+        updateRelocationPills();
+        renderSoundBook();
+        sbPickerWrap.classList.remove('open');
+        sbDropdown.classList.remove('open');
+        sbPickerInput.value = '';
+      });
+      sbDropdown.appendChild(opt);
+    });
+    sbDropdown.classList.toggle('open', matches.length > 0);
+  }
+
+  sbChangeBtn.addEventListener('click', () => {
+    const isOpen = sbPickerWrap.classList.contains('open');
+    if (isOpen) {
+      sbPickerWrap.classList.remove('open');
+      sbDropdown.classList.remove('open');
+    } else {
+      sbPickerWrap.classList.add('open');
+      renderSbCityDropdown('');
+      sbPickerInput.focus();
+    }
+  });
+
+  sbPickerInput.addEventListener('input', () => renderSbCityDropdown(sbPickerInput.value));
 
   document.getElementById('dashboardBtn').addEventListener('click', () => {
     renderParentDashboard();
@@ -2700,7 +3293,12 @@
   /* ══════════════════════════════════════════
      RECORDING FEATURE
   ══════════════════════════════════════════ */
-  const recordedSoundsList = [];
+  function saveRecordingsToStorage() {
+    try { localStorage.setItem('recordedSounds', JSON.stringify(recordedSoundsList)); } catch(e) {}
+  }
+  const recordedSoundsList = (() => {
+    try { return JSON.parse(localStorage.getItem('recordedSounds') || '[]'); } catch(e) { return []; }
+  })();
 
   let mediaRecorder  = null;
   let audioChunks    = [];
@@ -2954,7 +3552,7 @@
       : new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
     const m = Math.floor(recSeconds / 60);
     const s = (recSeconds % 60).toString().padStart(2,'0');
-    recordedSoundsList.unshift({
+    const entry = {
       id: Date.now(),
       name,
       coverUrl,
@@ -2962,7 +3560,19 @@
       audioUrl: recAudioUrl,
       duration: m + ':' + s,
       date,
-    });
+    };
+    recordedSoundsList.unshift(entry);
+    // persist audio as base64 so it survives page reload
+    if (recAudioBlob) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        entry.audioUrl = reader.result;
+        saveRecordingsToStorage();
+      };
+      reader.readAsDataURL(recAudioBlob);
+    } else {
+      saveRecordingsToStorage();
+    }
     closeRecModal();
     // re-render and switch to recorded tab
     renderSoundBook();
