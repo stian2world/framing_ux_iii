@@ -595,7 +595,7 @@
     .dm-streak-pip { width: 8px; height: 8px; border-radius: 50%; background: var(--stroke); }
     .dm-streak-pip.done { background: var(--dark-btn); }
     /* ─── DM ASK CITY (Gemini) ─── */
-    .dm-ask { margin-top: 2.4rem; width: 100%; max-width: 860px; }
+    .dm-ask { width: 100%; }
     .dm-ask-label {
       font-size: .54rem; letter-spacing: .22em; text-transform: uppercase;
       color: var(--muted-lt); margin-bottom: 1.2rem;
@@ -659,6 +659,71 @@
     .dm-ask-response.has-answer { color: var(--dark); }
     .dm-ask-response.dm-ask-loading { color: var(--muted-lt); font-style: italic; }
     .dm-ask-loading { color: var(--muted-lt); font-style: italic; }
+    .dm-locate-btn {
+      font-family: var(--font); font-size: .58rem; letter-spacing: .1em; text-transform: uppercase;
+      background: rgba(255,220,60,0.18); border: 1.5px solid rgba(220,180,0,0.38); border-radius: 10px;
+      padding: .7rem 1.2rem; cursor: pointer; color: #7a6000; width: 100%;
+      transition: background .2s; margin-bottom: .5rem;
+    }
+    .dm-locate-btn:hover { background: rgba(255,220,60,0.35); }
+    .dm-locate-btn:disabled { opacity: .5; cursor: default; }
+    .dm-locate-status {
+      font-size: .55rem; letter-spacing: .05em; color: var(--muted); margin-bottom: .5rem;
+      line-height: 1.6;
+    }
+    .dm-locate-places { display: flex; flex-wrap: wrap; gap: .4rem; margin-bottom: .6rem; }
+    .dm-locate-place-tag {
+      font-size: .48rem; letter-spacing: .08em; text-transform: uppercase;
+      background: rgba(200,240,200,0.45); border: 1px solid rgba(100,180,100,0.38);
+      border-radius: 100px; padding: .28rem .75rem; color: #2a5a2a;
+    }
+    .dm-manual-toggle {
+      font-size: .48rem; letter-spacing: .1em; text-transform: uppercase;
+      color: var(--muted-lt); background: none; border: none; cursor: pointer;
+      padding: .2rem 0; text-decoration: underline; font-family: var(--font); margin-bottom: .4rem;
+    }
+    .dm-location-group {
+      margin-top: 2rem; width: 100%; max-width: 860px;
+      background: rgba(255,255,255,0.35); border: 1.5px solid rgba(200,196,190,0.3);
+      border-radius: 18px; padding: 1.6rem 1.8rem;
+      display: flex; flex-direction: column; gap: 1.8rem;
+    }
+    .dm-location-group-divider {
+      width: 100%; height: 1px; background: rgba(200,196,190,0.5);
+    }
+    .dm-mission-search {
+      width: 100%;
+    }
+    .dm-mission-search-btn {
+      font-family: var(--font); font-size: .58rem; letter-spacing: .1em; text-transform: uppercase;
+      background: rgba(180,160,255,0.18); border: 1.5px solid rgba(140,110,255,0.38); border-radius: 10px;
+      padding: .7rem 1.2rem; cursor: pointer; color: #4a2fa0; width: 100%;
+      transition: background .2s; margin-bottom: .5rem;
+    }
+    .dm-mission-search-btn:hover { background: rgba(180,160,255,0.35); }
+    .dm-mission-search-btn:disabled { opacity: .5; cursor: default; }
+    .dm-mission-search-status {
+      font-size: .55rem; letter-spacing: .05em; color: var(--muted); margin-bottom: .5rem; line-height: 1.6;
+    }
+    .dm-mission-results { display: flex; flex-direction: column; gap: .5rem; }
+    .dm-mission-result-card {
+      display: flex; align-items: center; justify-content: space-between;
+      background: rgba(245,243,255,0.7); border: 1.5px solid rgba(180,160,255,0.35);
+      border-radius: 12px; padding: .7rem 1rem;
+    }
+    .dm-mission-result-name {
+      font-size: .6rem; letter-spacing: .04em; color: var(--dark); font-weight: 600;
+    }
+    .dm-mission-result-dist {
+      font-size: .5rem; letter-spacing: .06em; color: var(--muted); margin-top: .15rem;
+    }
+    .dm-mission-result-map {
+      font-family: var(--font); font-size: .48rem; letter-spacing: .1em; text-transform: uppercase;
+      color: #4a2fa0; background: rgba(180,160,255,0.18); border: 1px solid rgba(140,110,255,0.35);
+      border-radius: 8px; padding: .3rem .7rem; text-decoration: none; white-space: nowrap;
+      transition: background .15s;
+    }
+    .dm-mission-result-map:hover { background: rgba(180,160,255,0.38); }
 
     /* ─── STAR BURST ─── */
     .star-particle {
@@ -1558,33 +1623,27 @@
       </div>
     </div>
     <div class="dm-streak" id="dmStreak"></div>
-    <div class="dm-ask" id="dmAsk">
-      <div class="dm-ask-label">Explore what's near your home</div>
-      <div class="dm-ask-columns">
+    <div class="dm-location-group">
+      <div class="dm-mission-search" id="dmMissionSearch">
+        <div class="dm-ask-label" id="dmMissionSearchLabel">Today's mission spot</div>
+        <button class="dm-mission-search-btn" id="dmMissionSearchBtn">🔍 Search nearby</button>
+        <div class="dm-mission-search-status" id="dmMissionSearchStatus"></div>
+        <div class="dm-mission-results" id="dmMissionResults"></div>
+      </div>
 
-        <div class="dm-ask-left">
-          <div class="dm-ask-section-label">Location</div>
-          <div class="dm-ask-address">
-            <input class="dm-ask-city-input" id="dmAskCityInput" placeholder="City, e.g. New York" />
-            <input class="dm-ask-city-input" id="dmAskStreetInput" placeholder="Street, e.g. 123 W 14th St" />
-            <input class="dm-ask-city-input" id="dmAskAptInput" placeholder="Building or neighbourhood, e.g. Chelsea" />
-          </div>
+      <div class="dm-location-group-divider"></div>
 
-          <div class="dm-ask-section-label">Quick questions</div>
-          <div class="dm-ask-chips" id="dmAskChips"></div>
-
-          <div class="dm-ask-section-label">Ask your own</div>
-          <div class="dm-ask-input-row">
-            <input class="dm-ask-input" id="dmAskInput" placeholder="What do you want to know?" />
-            <button class="dm-ask-send" id="dmAskSend">→</button>
-          </div>
+      <div class="dm-ask" id="dmAsk">
+        <div class="dm-ask-label">Places near your home</div>
+        <button class="dm-locate-btn" id="dmLocateBtn">📍 Find places near me</button>
+        <div class="dm-locate-status" id="dmLocateStatus"></div>
+        <div class="dm-locate-places" id="dmLocatePlaces"></div>
+        <button class="dm-manual-toggle" id="dmManualToggle">or type your address instead</button>
+        <div class="dm-ask-address" id="dmManualAddress" style="display:none; margin-top:.4rem; margin-bottom:.5rem;">
+          <input class="dm-ask-city-input" id="dmAskCityInput" placeholder="City, e.g. New York" />
+          <input class="dm-ask-city-input" id="dmAskStreetInput" placeholder="Street, e.g. 123 W 14th St" />
+          <input class="dm-ask-city-input" id="dmAskAptInput" placeholder="Building or neighbourhood, e.g. Chelsea" />
         </div>
-
-        <div class="dm-ask-right">
-          <div class="dm-ask-section-label">Answer</div>
-          <div class="dm-ask-response" id="dmAskResponse">Ask something to get started…</div>
-        </div>
-
       </div>
     </div>
   </section>
@@ -2751,42 +2810,36 @@
     { text: 'Find a neighbourhood you haven\'t explored and record it', hint: 'Every block has its own sonic personality. Walk somewhere new today.', nearbyType: 'neighborhood', nearbyLabel: 'Places to explore nearby', nearbyQ: 'Any interesting neighbourhoods to explore nearby?' },
   ];
 
+  let _detectedLocation = null;
+  let _currentMission   = null;
+
+  const OVERPASS_TYPE_MAP = {
+    transit_station:        { parts: [['public_transport','stop_position'],['amenity','bus_station'],['railway','halt'],['railway','tram_stop']], label: 'transit stops' },
+    subway_station:         { parts: [['railway','subway_entrance'],['railway','station']], label: 'subway stations' },
+    cafe:                   { parts: [['amenity','cafe']], label: 'cafes' },
+    park:                   { parts: [['leisure','park'],['leisure','playground'],['leisure','garden']], label: 'parks & playgrounds' },
+    grocery_or_supermarket: { parts: [['shop','supermarket'],['shop','convenience'],['amenity','marketplace'],['shop','greengrocer']], label: 'markets & stores' },
+    train_station:          { parts: [['railway','station']], label: 'train stations' },
+    point_of_interest:      { parts: [['tourism','attraction'],['historic','monument'],['tourism','viewpoint']], label: 'points of interest' },
+    shopping_mall:          { parts: [['shop','mall'],['amenity','marketplace'],['shop','department_store']], label: 'shopping areas' },
+    church:                 { parts: [['amenity','place_of_worship']], label: 'places of worship' },
+    museum:                 { parts: [['tourism','museum'],['amenity','library']], label: 'museums & libraries' },
+    stadium:                { parts: [['leisure','stadium'],['leisure','sports_centre'],['leisure','pitch']], label: 'sports venues' },
+    restaurant:             { parts: [['amenity','restaurant']], label: 'restaurants' },
+    zoo:                    { parts: [['tourism','zoo'],['leisure','nature_reserve'],['leisure','park']], label: 'parks & zoos' },
+    bar:                    { parts: [['amenity','bar'],['amenity','pub']], label: 'bars & pubs' },
+    store:                  { parts: [['shop','convenience'],['shop','hardware'],['shop','general']], label: 'shops & stores' },
+    bus_station:            { parts: [['amenity','bus_station'],['highway','bus_stop']], label: 'bus stops' },
+    night_club:             { parts: [['amenity','nightclub'],['amenity','bar']], label: 'nightlife spots' },
+    neighborhood:           { parts: [['place','neighbourhood'],['place','suburb'],['place','quarter']], label: 'neighbourhoods' },
+  };
+
   function getDailyMission() {
     const today = new Date();
     const seed = today.getFullYear() * 10000 + (today.getMonth() + 1) * 100 + today.getDate();
     return dailyMissions[seed % dailyMissions.length];
   }
 
-  const DEEPSEEK_KEY = 'sk-0937e6bdc7ed443bb217402f374329ef';
-
-  async function askGemini(question) {
-    const res = await fetch(
-      `https://api.deepseek.com/chat/completions`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${DEEPSEEK_KEY}`
-        },
-        body: JSON.stringify({
-          model: 'deepseek-chat',
-          messages: [{ role: 'user', content: question }]
-        })
-      }
-    );
-    const data = await res.json();
-    if (!res.ok) return `Error ${res.status}: ${data?.error?.message ?? 'Unknown error'}`;
-    return data.choices?.[0]?.message?.content ?? null;
-  }
-
-  const DM_CITY_CHIPS = [
-    'Any parks or green spaces nearby?',
-    'Best coffee shops walking distance?',
-    'Grocery stores nearby?',
-    'Subway or bus stops nearby?',
-    'Any good restaurants nearby?',
-    'What is the neighbourhood like?',
-  ];
 
   function renderDailyMission() {
     const mission = getDailyMission();
@@ -2804,75 +2857,187 @@
       streak.appendChild(pip);
     }
 
-    document.getElementById('dmAskCityInput').value = relocationCity || '';
-    document.getElementById('dmAskStreetInput').value = '';
-    document.getElementById('dmAskAptInput').value = '';
-    _currentNearbyQ = mission.nearbyQ || null;
-    renderCityChips();
+    _detectedLocation = null;
+    document.getElementById('dmLocateStatus').textContent = '';
+    document.getElementById('dmLocatePlaces').innerHTML = '';
+    document.getElementById('dmLocateBtn').textContent = '📍 Find places near me';
+    document.getElementById('dmLocateBtn').disabled = false;
 
-    const respEl = document.getElementById('dmAskResponse');
-    respEl.className = 'dm-ask-response';
-    respEl.textContent = 'Ask something to get started…';
-    document.getElementById('dmAskInput').value = '';
+    _currentMission = mission;
+    document.getElementById('dmMissionSearchBtn').textContent = '🔍 Search today\'s mission spot';
+    document.getElementById('dmMissionSearchBtn').disabled = false;
+    document.getElementById('dmMissionSearchStatus').textContent = '';
+    document.getElementById('dmMissionResults').innerHTML = '';
   }
 
-  let _currentNearbyQ = null;
+  async function queryOverpassPlaces(lat, lng) {
+    const r = 600;
+    const query = `[out:json][timeout:12];(node["amenity"](around:${r},${lat},${lng});node["leisure"~"park|playground|garden"](around:${r},${lat},${lng});node["shop"~"supermarket|convenience|bakery"](around:${r},${lat},${lng}););out body 30;`;
+    const res = await fetch('https://overpass-api.de/api/interpreter', { method: 'POST', body: query });
+    const data = await res.json();
+    const places = [];
+    const seen = new Set();
+    for (const el of (data.elements || [])) {
+      const name = el.tags?.name;
+      if (!name || seen.has(name)) continue;
+      seen.add(name);
+      const type = el.tags?.amenity || el.tags?.leisure || el.tags?.shop || 'place';
+      places.push({ name, type });
+      if (places.length >= 14) break;
+    }
+    return places;
+  }
 
-  function renderCityChips() {
-    const chipsEl = document.getElementById('dmAskChips');
-    chipsEl.innerHTML = '';
-
-    const allChips = _currentNearbyQ
-      ? [{ text: _currentNearbyQ, highlight: true }, ...DM_CITY_CHIPS.map(t => ({ text: t, highlight: false }))]
-      : DM_CITY_CHIPS.map(t => ({ text: t, highlight: false }));
-
-    allChips.forEach(({ text: q, highlight }) => {
-      const chip = document.createElement('button');
-      chip.className = 'dm-ask-chip' + (highlight ? ' dm-ask-chip-highlight' : '');
-      chip.textContent = q;
-      chip.addEventListener('click', () => {
-        document.getElementById('dmAskInput').value = q;
-        document.getElementById('dmAskInput').focus();
+  async function detectLocation() {
+    const btn = document.getElementById('dmLocateBtn');
+    const status = document.getElementById('dmLocateStatus');
+    const placesEl = document.getElementById('dmLocatePlaces');
+    btn.disabled = true;
+    btn.textContent = 'Detecting…';
+    status.textContent = '';
+    placesEl.innerHTML = '';
+    try {
+      const pos = await new Promise((resolve, reject) =>
+        navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 9000 })
+      );
+      const { latitude: lat, longitude: lng } = pos.coords;
+      status.textContent = 'Finding nearby places…';
+      const [geoRes, places] = await Promise.all([
+        fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`, { headers: { 'Accept-Language': 'en' } }),
+        queryOverpassPlaces(lat, lng)
+      ]);
+      const geoData = await geoRes.json();
+      const neighbourhood = geoData.address?.neighbourhood || geoData.address?.suburb || geoData.address?.district || '';
+      const city = geoData.address?.city || geoData.address?.town || geoData.address?.village || '';
+      const addressStr = [neighbourhood, city].filter(Boolean).join(', ');
+      _detectedLocation = { lat, lng, address: addressStr, places };
+      status.textContent = addressStr ? `📍 ${addressStr}` : '📍 Location found';
+      placesEl.innerHTML = '';
+      places.slice(0, 9).forEach(({ name }) => {
+        const tag = document.createElement('span');
+        tag.className = 'dm-locate-place-tag';
+        tag.textContent = name;
+        placesEl.appendChild(tag);
       });
-      chipsEl.appendChild(chip);
-    });
+      btn.textContent = '📍 Refresh location';
+      btn.disabled = false;
+    } catch (err) {
+      status.textContent = err.code === 1
+        ? 'Location access denied — type your address below.'
+        : 'Could not detect location — type your address below.';
+      document.getElementById('dmManualAddress').style.display = 'flex';
+      document.getElementById('dmManualToggle').style.display = 'none';
+      btn.textContent = '📍 Try again';
+      btn.disabled = false;
+    }
   }
 
-  ['dmAskCityInput', 'dmAskStreetInput', 'dmAskAptInput'].forEach(id => {
-    document.getElementById(id).addEventListener('input', () => renderCityChips());
+  document.getElementById('dmLocateBtn').addEventListener('click', detectLocation);
+  document.getElementById('dmManualToggle').addEventListener('click', () => {
+    const addr = document.getElementById('dmManualAddress');
+    const tog = document.getElementById('dmManualToggle');
+    const shown = addr.style.display !== 'none';
+    addr.style.display = shown ? 'none' : 'flex';
+    tog.textContent = shown ? 'or type your address instead' : 'hide manual address';
   });
 
-  async function submitCityQuestion() {
-    const input = document.getElementById('dmAskInput');
-    const respEl = document.getElementById('dmAskResponse');
-    const q = input.value.trim();
-    if (!q) return;
-
-    const city   = document.getElementById('dmAskCityInput').value.trim();
-    const street = document.getElementById('dmAskStreetInput').value.trim();
-    const apt    = document.getElementById('dmAskAptInput').value.trim();
-
-    const parts = ['I\'m living'];
-    if (street) parts.push('at ' + street);
-    if (apt)    parts.push(apt);
-    if (city)   parts.push(city);
-    const prefix = parts.length > 1 ? parts.join(', ') + '. ' : '';
-
-    const fullPrompt = prefix + q;
-
-    respEl.style.display = 'block';
-    respEl.className = 'dm-ask-response dm-ask-loading';
-    respEl.textContent = 'Thinking…';
-
-    const answer = await askGemini(fullPrompt);
-    respEl.className = 'dm-ask-response has-answer';
-    respEl.textContent = answer ?? 'No response returned.';
+  function haversineM(lat1, lng1, lat2, lng2) {
+    const R = 6371000, rad = Math.PI / 180;
+    const dLat = (lat2 - lat1) * rad, dLng = (lng2 - lng1) * rad;
+    const a = Math.sin(dLat/2)**2 + Math.cos(lat1*rad)*Math.cos(lat2*rad)*Math.sin(dLng/2)**2;
+    return Math.round(R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)));
   }
 
-  document.getElementById('dmAskSend').addEventListener('click', submitCityQuestion);
-  document.getElementById('dmAskInput').addEventListener('keydown', e => {
-    if (e.key === 'Enter') submitCityQuestion();
-  });
+  async function searchMissionSpots() {
+    const btn = document.getElementById('dmMissionSearchBtn');
+    const status = document.getElementById('dmMissionSearchStatus');
+    const resultsEl = document.getElementById('dmMissionResults');
+    if (!_currentMission?.nearbyType) return;
+
+    btn.disabled = true;
+    btn.textContent = 'Searching…';
+    status.textContent = '';
+    resultsEl.innerHTML = '';
+
+    try {
+      let lat, lng;
+      if (_detectedLocation) {
+        ({ lat, lng } = _detectedLocation);
+      } else {
+        status.textContent = 'Getting your location…';
+        const pos = await new Promise((resolve, reject) =>
+          navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 9000 })
+        );
+        lat = pos.coords.latitude;
+        lng = pos.coords.longitude;
+        _detectedLocation = { lat, lng, address: '', places: [] };
+      }
+
+      const typeInfo = OVERPASS_TYPE_MAP[_currentMission.nearbyType];
+      if (!typeInfo) { status.textContent = 'No search available for this mission type.'; btn.disabled = false; btn.textContent = '🔍 Search today\'s mission spot'; return; }
+
+      const r = 1000;
+      const nodeParts = typeInfo.parts.map(([k,v]) => `node["${k}"="${v}"](around:${r},${lat},${lng});`).join('');
+      const wayParts  = typeInfo.parts.map(([k,v]) => `way["${k}"="${v}"](around:${r},${lat},${lng});`).join('');
+      const query = `[out:json][timeout:14];(${nodeParts}${wayParts});out center 20;`;
+
+      const res = await fetch('https://overpass-api.de/api/interpreter', { method: 'POST', body: query });
+      const data = await res.json();
+
+      const seen = new Set();
+      const spots = [];
+      for (const el of (data.elements || [])) {
+        const name = el.tags?.name;
+        if (!name || seen.has(name)) continue;
+        seen.add(name);
+        const elLat = el.lat ?? el.center?.lat;
+        const elLng = el.lon ?? el.center?.lon;
+        const dist = (elLat && elLng) ? haversineM(lat, lng, elLat, elLng) : null;
+        spots.push({ name, lat: elLat, lng: elLng, dist });
+        if (spots.length >= 8) break;
+      }
+
+      if (spots.length === 0) {
+        status.textContent = `No ${typeInfo.label} found within 1 km.`;
+      } else {
+        spots.sort((a, b) => (a.dist ?? 9999) - (b.dist ?? 9999));
+        spots.forEach(({ name, lat: sLat, lng: sLng, dist }) => {
+          const card = document.createElement('div');
+          card.className = 'dm-mission-result-card';
+          const info = document.createElement('div');
+          const nameEl = document.createElement('div');
+          nameEl.className = 'dm-mission-result-name';
+          nameEl.textContent = name;
+          info.appendChild(nameEl);
+          if (dist !== null) {
+            const distEl = document.createElement('div');
+            distEl.className = 'dm-mission-result-dist';
+            distEl.textContent = dist < 1000 ? `${dist} m away` : `${(dist/1000).toFixed(1)} km away`;
+            info.appendChild(distEl);
+          }
+          card.appendChild(info);
+          if (sLat && sLng) {
+            const mapLink = document.createElement('a');
+            mapLink.className = 'dm-mission-result-map';
+            mapLink.href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(name)}&ll=${sLat},${sLng}`;
+            mapLink.target = '_blank';
+            mapLink.rel = 'noopener';
+            mapLink.textContent = 'Map →';
+            card.appendChild(mapLink);
+          }
+          resultsEl.appendChild(card);
+        });
+      }
+      btn.textContent = '🔍 Search today\'s mission spot';
+      btn.disabled = false;
+    } catch (err) {
+      status.textContent = err.code === 1 ? 'Location access denied.' : 'Could not get location. Try again.';
+      btn.textContent = '🔍 Search today\'s mission spot';
+      btn.disabled = false;
+    }
+  }
+
+  document.getElementById('dmMissionSearchBtn').addEventListener('click', searchMissionSpots);
 
   document.getElementById('dailyMissionBtn').addEventListener('click', () => {
     renderDailyMission();
