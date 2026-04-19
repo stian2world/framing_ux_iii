@@ -86,11 +86,13 @@
       65%  { opacity:1; transform:scale(1.06); }
       100% { opacity:1; transform:scale(1); }
     }
+    #welcomeShapes .shape-inner svg { transform: scale(0.65); transform-origin: center center; }
 
     /* ─── SCREENS ─── */
     .screen { display: none; min-height: 100vh; background: #fff; }
     .screen.active { display: flex; flex-direction: column; }
     #hero { background: transparent; }
+    #type-screen { background: transparent; }
     #soundbook-screen { background: rgba(255,255,255,0.78); }
 
     /* ─── WELCOME ─── */
@@ -128,13 +130,30 @@
       font-size: clamp(1.9rem, 5vw, 2.8rem);
       text-transform: uppercase; letter-spacing: .05em;
       color: var(--title); line-height: 1.2;
-      margin-bottom: .55rem;
+      margin-bottom: 2rem;
     }
     .welcome-sub {
-      font-size: .62rem; letter-spacing: .18em; text-transform: uppercase;
-      color: var(--muted-lt); margin-bottom: 1.8rem;
+      font-family: var(--font); font-size: .6rem; letter-spacing: .18em;
+      text-transform: uppercase; color: var(--muted); margin: 0 0 .25rem;
     }
-    .welcome-name-wrap { width: 100%; }
+    .welcome-role-label {
+      font-family: var(--font); font-size: .6rem; letter-spacing: .18em;
+      text-transform: uppercase; color: var(--muted); margin: .8rem 0 .25rem;
+    }
+    .welcome-name-wrap { width: 100%; position: relative; }
+    .name-recent-dropdown {
+      position: absolute; top: calc(100% + 6px); left: 0; right: 0;
+      background: #fff; border: 1.5px solid var(--stroke); border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0,0,0,.1); z-index: 100; overflow: hidden; display: none;
+    }
+    .name-recent-dropdown.visible { display: block; }
+    .name-recent-item {
+      font-family: var(--font); font-size: .62rem; letter-spacing: .1em; text-transform: uppercase;
+      color: var(--dark); padding: .7rem 1.1rem; cursor: pointer;
+      display: flex; align-items: center; gap: .6rem; transition: background .15s;
+    }
+    .name-recent-item:hover { background: #F5F3F0; }
+    .name-recent-item::before { content: '↩'; font-size: .55rem; color: var(--muted-lt); }
     .welcome-input {
       width: 100%; font-family: var(--font); font-size: .9rem;
       font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
@@ -168,7 +187,7 @@
       transition: background .2s, border-color .2s, color .2s, transform .18s, box-shadow .2s;
     }
     /* child: pill — playful and round */
-    .btn-mode-child { border-radius: 100px; border-color: #FFB3C6; }
+    .btn-mode-child { border-radius: 14px; border-color: #FFB3C6; }
     .btn-mode-child:hover { background: #FFF5F7; border-color: #FF9EB0; transform: translateY(-2px); box-shadow: 0 4px 18px rgba(255,158,176,.22); }
     .btn-mode-child.selected { background: #FFF0F4; border-color: #FF9EB0; border-width: 2px; color: var(--dark); box-shadow: 0 4px 18px rgba(255,158,176,.28); }
     /* parent: rounded rect — clean and structured */
@@ -245,6 +264,22 @@
     #city-input:focus { border-color: var(--dark); }
     #city-input::placeholder { color: var(--stroke-mid); }
     .type-hint { margin-top: 1.6rem; font-size: .6rem; letter-spacing: .2em; text-transform: uppercase; color: var(--muted-lt); }
+    .city-input-wrap { position: relative; display: inline-block; }
+    .city-recent-dropdown {
+      position: absolute; top: calc(100% + 8px); left: 50%; transform: translateX(-50%);
+      background: #fff; border: 1.5px solid var(--stroke); border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0,0,0,.1); min-width: 180px;
+      z-index: 100; overflow: hidden; display: none;
+    }
+    .city-recent-dropdown.visible { display: block; }
+    .city-recent-item {
+      font-family: var(--font); font-size: .62rem; letter-spacing: .1em; text-transform: uppercase;
+      color: var(--dark); padding: .7rem 1.1rem; cursor: pointer;
+      display: flex; align-items: center; gap: .6rem;
+      transition: background .15s;
+    }
+    .city-recent-item:hover { background: #F5F3F0; }
+    .city-recent-item::before { content: '↩'; font-size: .55rem; color: var(--muted-lt); }
     .scroll-hint { position: absolute; bottom: 2.5rem; display: flex; flex-direction: column; align-items: center; gap: 8px; font-size: .58rem; letter-spacing: .2em; text-transform: uppercase; color: var(--muted-lt); transition: opacity .4s; }
     .scroll-arrow { width: 18px; height: 18px; border-right: 1.5px solid var(--muted-lt); border-bottom: 1.5px solid var(--muted-lt); transform: rotate(45deg); animation: bounce 1.4s ease-in-out infinite; }
     @keyframes bounce { 0%,100%{transform:rotate(45deg) translateY(0)} 50%{transform:rotate(45deg) translateY(5px)} }
@@ -278,11 +313,25 @@
       display: inline-flex; align-items: center; gap: 8px;
       font-size: .6rem; letter-spacing: .18em; text-transform: uppercase;
       color: var(--muted); cursor: pointer; border: none; background: none;
-      font-family: var(--font); margin-bottom: 2.5rem;
-      padding: 0; transition: color .2s;
+      font-family: var(--font); padding: 0; transition: color .2s;
     }
     .sound-back:hover { color: var(--dark); }
     .sound-back-arrow { font-size: .8rem; }
+    .btn-relocation {
+      font-family: var(--font); font-size: .6rem; letter-spacing: .14em; text-transform: uppercase;
+      color: #9A8430; background: rgba(255,248,180,0.5); border: 1.5px solid rgba(220,200,100,0.4);
+      border-radius: 100px; padding: .46rem 1.1rem; cursor: pointer;
+      display: inline-flex; align-items: center; gap: .45rem;
+      transition: background .18s, border-color .18s, transform .12s, box-shadow .18s;
+    }
+    .btn-relocation:hover { background: rgba(255,248,180,0.8); border-color: rgba(200,175,80,0.6); transform: translateY(-1px); box-shadow: 0 4px 14px rgba(180,160,60,.12); }
+    .btn-relocation.active {
+      background: var(--dark-btn);
+      color: #fff; border-color: transparent;
+      box-shadow: 0 4px 14px rgba(0,0,0,.18);
+    }
+    .btn-relocation.active:hover { background: #333; transform: translateY(-1px); }
+    .btn-relocation-icon { font-size: .75rem; line-height: 1; }
 
     .sound-city-name {
       font-family: var(--font); font-weight: 800;
@@ -295,6 +344,17 @@
       font-size: .62rem; letter-spacing: .22em; text-transform: uppercase;
       color: var(--muted-lt); margin-bottom: 3.5rem;
     }
+
+    /* ─── REFRESH BUTTON ─── */
+    .sound-refresh-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: .75rem; width: 100%; }
+    .sound-refresh-row .sound-city-sub { margin-bottom: 0; }
+    #refreshSoundsBtn {
+      font-family: var(--font); font-size: .6rem; letter-spacing: .14em; text-transform: uppercase;
+      color: #fff; background: #FF6B6B; border: none;
+      border-radius: 8px; padding: .42rem .9rem; cursor: pointer;
+      transition: background .15s, transform .1s;
+    }
+    #refreshSoundsBtn:hover { background: #FF4F4F; transform: translateY(-1px); }
 
     /* ─── SOUND CARDS ─── */
     .sound-cards-grid {
@@ -470,6 +530,184 @@
     .sound-card.playing .card-like-btn { border-color: rgba(255,255,255,.2); color: rgba(255,255,255,.5); }
     .sound-card.playing .card-like-btn.liked { background: rgba(255,255,255,.15); color: var(--bg); border-color: transparent; }
 
+    /* ─── DAILY MISSION SCREEN ─── */
+    #daily-mission-screen {
+      flex-direction: column; align-items: flex-start;
+      padding: 100px 5vw 6rem; position: relative; z-index: 1;
+      animation: fadeUp .6s ease forwards; background: rgba(255,255,255,0.78);
+    }
+    .dm-back { display: inline-flex; align-items: center; gap: 8px; font-size: .6rem; letter-spacing: .18em; text-transform: uppercase; color: var(--muted); cursor: pointer; border: none; background: none; font-family: var(--font); padding: 0; margin-bottom: 2.5rem; transition: color .2s; }
+    .dm-back:hover { color: var(--dark); }
+    .dm-header { margin-bottom: 2.8rem; }
+    .dm-eyebrow { font-size: .54rem; letter-spacing: .24em; text-transform: uppercase; color: var(--muted-lt); margin-bottom: .6rem; }
+    .dm-title { font-family: var(--font); font-weight: 800; font-size: clamp(1.4rem,3vw,2.2rem); letter-spacing: .04em; text-transform: uppercase; color: var(--title); }
+    .dm-date { font-size: .56rem; letter-spacing: .18em; text-transform: uppercase; color: var(--muted-lt); margin-top: .5rem; }
+    .dm-card {
+      width: 100%; max-width: 560px;
+      background: rgba(245, 243, 240, 0.75);
+      border: 1px solid rgba(200, 196, 190, 0.45); border-radius: 24px;
+      padding: 2.4rem 2.6rem; margin-bottom: 2rem;
+      backdrop-filter: blur(6px);
+      position: relative; overflow: hidden;
+    }
+    .dm-card-deco {
+      position: absolute; top: 1.2rem; right: 1.6rem;
+      font-size: 2.8rem; line-height: 1; opacity: 0.13;
+      pointer-events: none; user-select: none;
+      animation: decoFloat 4s ease-in-out infinite;
+    }
+    @keyframes decoFloat {
+      0%, 100% { transform: translateY(0px) rotate(-6deg); }
+      50%       { transform: translateY(-6px) rotate(-2deg); }
+    }
+    .dm-card-tag {
+      display: inline-flex; align-items: center; gap: .4rem;
+      font-size: .5rem; letter-spacing: .2em; text-transform: uppercase;
+      color: var(--muted); background: rgba(255,255,255,0.7); border: 1px solid rgba(200,196,190,0.5);
+      border-radius: 100px; padding: 3px 12px; margin-bottom: 1.4rem;
+    }
+    .dm-mission-text {
+      font-family: var(--font); font-weight: 700;
+      font-size: clamp(1rem, 2.2vw, 1.4rem); letter-spacing: .03em; text-transform: uppercase;
+      color: var(--title); line-height: 1.4; margin-bottom: 1rem;
+    }
+    .dm-mission-hint {
+      font-size: .62rem; letter-spacing: .1em; text-transform: uppercase;
+      color: var(--muted); line-height: 1.7;
+    }
+    .dm-actions { display: flex; align-items: center; gap: .8rem; margin-top: 2rem; }
+    .dm-record-btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-family: var(--font); font-size: .62rem; letter-spacing: .14em; text-transform: uppercase;
+      background: rgba(255,248,180,0.7); color: #7a6520;
+      border: 1.5px solid rgba(220,200,100,0.45); border-radius: 100px; padding: .7rem 1.6rem; cursor: pointer;
+      transition: background .2s, transform .15s; box-shadow: 0 4px 14px rgba(180,160,60,.12);
+    }
+    .dm-record-btn:hover { background: rgba(255,248,180,1); transform: translateY(-1px); }
+    .dm-record-dot { width: 7px; height: 7px; border-radius: 50%; background: #c8a020; flex-shrink: 0; }
+    .dm-skip-btn {
+      font-family: var(--font); font-size: .58rem; letter-spacing: .14em; text-transform: uppercase;
+      color: var(--muted-lt); background: none; border: none; cursor: pointer;
+      padding: 0; transition: color .2s;
+    }
+    .dm-skip-btn:hover { color: var(--muted); }
+    .dm-streak { display: flex; align-items: center; gap: .5rem; margin-top: 2.4rem; font-size: .56rem; letter-spacing: .16em; text-transform: uppercase; color: var(--muted-lt); }
+    .dm-streak-pip { width: 8px; height: 8px; border-radius: 50%; background: var(--stroke); }
+    .dm-streak-pip.done { background: var(--dark-btn); }
+    /* ─── DM ASK CITY (Gemini) ─── */
+    .dm-ask { margin-top: 2.4rem; width: 100%; max-width: 560px; }
+    .dm-ask-label {
+      font-size: .54rem; letter-spacing: .22em; text-transform: uppercase;
+      color: var(--muted-lt); margin-bottom: 1rem;
+    }
+    .dm-ask-label span { color: var(--muted); }
+    .dm-ask-chips { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 1rem; }
+    .dm-ask-chip {
+      font-family: var(--font); font-size: .55rem; letter-spacing: .1em; text-transform: uppercase;
+      color: var(--muted); background: rgba(245,243,240,0.7); border: 1.5px solid rgba(200,196,190,0.45);
+      border-radius: 100px; padding: .4rem 1rem; cursor: pointer;
+      transition: background .15s, color .15s;
+    }
+    .dm-ask-chip:hover { background: rgba(228,224,220,0.9); color: var(--dark); }
+    .dm-ask-input-row { display: flex; gap: .5rem; align-items: center; }
+    .dm-ask-input {
+      flex: 1; font-family: var(--font); font-size: .62rem; letter-spacing: .06em;
+      background: rgba(245,243,240,0.5); border: 1.5px solid rgba(200,196,190,0.4); border-radius: 10px;
+      padding: .65rem 1rem; outline: none; color: var(--dark);
+      transition: border-color .2s;
+    }
+    .dm-ask-input:focus { border-color: var(--stroke-mid); }
+    .dm-ask-send {
+      font-family: var(--font); font-size: .8rem; font-weight: 700;
+      background: rgba(245,243,240,0.8); color: var(--muted);
+      border: 1.5px solid rgba(200,196,190,0.45); border-radius: 10px; padding: .6rem 1rem; cursor: pointer;
+      transition: background .2s; line-height: 1;
+    }
+    .dm-ask-send:hover { background: rgba(228,224,220,1); color: var(--dark); }
+    .dm-ask-response {
+      margin-top: 1rem; background: rgba(255,255,255,0.75); border: 1.5px solid rgba(200,196,190,0.35);
+      border-radius: 14px; padding: 1.2rem 1.4rem;
+      font-size: .62rem; letter-spacing: .04em; line-height: 1.8;
+      color: var(--dark); white-space: pre-wrap;
+    }
+    .dm-ask-loading { color: var(--muted-lt); font-style: italic; }
+
+    /* ─── STAR BURST ─── */
+    .star-particle {
+      position: fixed; pointer-events: none; z-index: 9999;
+      font-size: 1.4rem; line-height: 1;
+      animation: starFly var(--dur, .9s) ease-out forwards;
+    }
+    @keyframes starFly {
+      0%   { opacity: 1; transform: translate(0,0) scale(1) rotate(0deg); }
+      100% { opacity: 0; transform: translate(var(--tx,0px), var(--ty,-80px)) scale(.5) rotate(var(--rot,30deg)); }
+    }
+    .note-particle {
+      position: fixed; pointer-events: none; z-index: 9999;
+      font-size: 1.2rem; line-height: 1;
+      animation: noteFly var(--dur,.8s) cubic-bezier(.2,.8,.4,1) forwards;
+    }
+    @keyframes noteFly {
+      0%   { opacity: 1; transform: translate(0,0) scale(1); }
+      60%  { opacity: 1; }
+      100% { opacity: 0; transform: translate(var(--tx,0px), var(--ty,-100px)) scale(.7); }
+    }
+
+    /* ─── PARENT DASHBOARD ─── */
+    #parent-dashboard-screen {
+      flex-direction: column; align-items: flex-start;
+      padding: 100px 5vw 6rem; position: relative; z-index: 1;
+      animation: fadeUp .6s ease forwards;
+    }
+    .pd-header { margin-bottom: 2.8rem; }
+    .pd-eyebrow { font-size: .54rem; letter-spacing: .24em; text-transform: uppercase; color: var(--muted-lt); margin-bottom: .6rem; }
+    .pd-title { font-family: var(--font); font-weight: 800; font-size: clamp(1.4rem,3vw,2.2rem); letter-spacing: .04em; text-transform: uppercase; color: var(--title); }
+    .pd-section { width: 100%; max-width: 700px; margin-bottom: 3rem; }
+    .pd-section-label {
+      font-size: .54rem; letter-spacing: .22em; text-transform: uppercase;
+      color: var(--muted-lt); margin-bottom: 1.2rem;
+      display: flex; align-items: center; gap: .6rem;
+    }
+    .pd-section-label::after { content: ''; flex: 1; height: 1px; background: var(--stroke); }
+    /* mission progress card */
+    .pd-mission-card {
+      background: linear-gradient(135deg, #FDF0F9 0%, #F0F4FF 100%);
+      border: 1px solid #E8B4DC; border-radius: 20px;
+      padding: 1.8rem 2rem;
+    }
+    .pd-mission-title {
+      font-family: var(--font); font-weight: 700;
+      font-size: clamp(.85rem,1.8vw,1.1rem); letter-spacing: .03em; text-transform: uppercase;
+      color: var(--title); margin-bottom: .6rem; line-height: 1.4;
+    }
+    .pd-mission-hint { font-size: .6rem; letter-spacing: .08em; color: var(--muted); line-height: 1.7; margin-bottom: 1.4rem; }
+    .pd-streak { display: flex; align-items: center; gap: .5rem; font-size: .54rem; letter-spacing: .16em; text-transform: uppercase; color: var(--muted-lt); }
+    .pd-streak-pip { width: 10px; height: 10px; border-radius: 50%; background: var(--stroke); }
+    .pd-streak-pip.done { background: #D490C8; }
+    .pd-streak-label { font-size: .52rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted-lt); margin-left: .4rem; }
+    /* sound collection grid */
+    .pd-sounds-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem; width: 100%; }
+    .pd-sound-card {
+      aspect-ratio: 1/1; display: flex; flex-direction: column;
+      justify-content: space-between; padding: 1.2rem;
+      border-radius: 18px; background: #F5F3F0; border: 1px solid var(--stroke);
+    }
+    .pd-sound-city {
+      display: inline-flex; align-items: center;
+      font-size: .5rem; letter-spacing: .14em; text-transform: uppercase;
+      background: #fff; border: 1px solid var(--stroke); border-radius: 100px;
+      padding: 3px 10px; color: var(--muted); width: fit-content;
+    }
+    .pd-sound-name {
+      font-family: var(--font); font-weight: 700;
+      font-size: .68rem; letter-spacing: .06em; text-transform: uppercase;
+      color: var(--title); line-height: 1.4;
+    }
+    .pd-empty { font-size: .62rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted-lt); }
+    .pd-progress-bar-wrap { width: 100%; background: var(--stroke); border-radius: 100px; height: 6px; margin-top: .8rem; overflow: hidden; }
+    .pd-progress-bar { height: 100%; border-radius: 100px; background: linear-gradient(90deg, #D490C8, #B066A8); transition: width .6s ease; }
+    .pd-progress-label { font-size: .52rem; letter-spacing: .14em; text-transform: uppercase; color: var(--muted-lt); margin-top: .4rem; }
+
     /* ─── SOUND BOOK SCREEN ─── */
     #soundbook-screen {
       flex-direction: column; align-items: flex-start;
@@ -500,27 +738,52 @@
     .soundbook-panel.active { display: block; }
 
     .soundbook-empty { font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted-lt); margin-top: 4rem; text-align: center; width: 100%; line-height: 2; }
-    .soundbook-city-block { width: 100%; margin-bottom: 3rem; }
-    .soundbook-city-label { display: inline-flex; align-items: center; gap: .4rem; font-size: .56rem; letter-spacing: .18em; text-transform: uppercase; color: var(--muted); background: #F5F3F0; border: 1px solid var(--stroke); border-radius: 100px; padding: 4px 12px; margin-bottom: 1rem; }
-    .soundbook-item {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: .9rem 1rem; border-bottom: 1px solid var(--stroke);
-      font-family: var(--font); font-size: clamp(.72rem,1.2vw,.88rem);
-      letter-spacing: .05em; text-transform: uppercase; color: var(--dark);
-      transition: background .18s;
+    .soundbook-saved-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+      gap: 1.2rem; width: 100%;
     }
-    .soundbook-item:hover { background: #F5F3F0; }
-    .soundbook-item-left { display: flex; align-items: center; gap: .6rem; }
-    .soundbook-item-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--stroke-mid); flex-shrink: 0; }
+    .soundbook-card {
+      aspect-ratio: 1 / 1;
+      display: flex; flex-direction: column; justify-content: space-between;
+      padding: 1.3rem; border-radius: 20px;
+      background: #F5F3F0; border: 1px solid var(--stroke);
+      font-family: var(--font); overflow: hidden;
+      transition: background .18s, transform .15s;
+    }
+    .soundbook-card:hover { background: #EDEAE5; transform: translateY(-2px); }
+    .soundbook-card-city {
+      display: inline-flex; align-items: center;
+      font-size: .48rem; letter-spacing: .18em; text-transform: uppercase;
+      color: var(--muted); background: #fff;
+      border: 1px solid var(--stroke); border-radius: 100px;
+      padding: 3px 10px; align-self: flex-start;
+    }
+    .soundbook-card-title {
+      font-size: .66rem; letter-spacing: .08em; text-transform: uppercase;
+      color: var(--dark); line-height: 1.5; flex: 1;
+      margin: .6rem 0 .3rem;
+    }
+    .soundbook-card-footer {
+      display: flex; align-items: center; justify-content: space-between;
+    }
     .soundbook-play-btn {
       display: flex; align-items: center; justify-content: center;
-      width: 34px; height: 34px; border-radius: 50%;
+      width: 36px; height: 36px; border-radius: 50%;
       background: var(--dark-btn); color: var(--bg);
       border: none; cursor: pointer; font-size: .75rem;
       transition: background .2s, transform .15s; flex-shrink: 0;
     }
     .soundbook-play-btn:hover { background: #35301A; transform: scale(1.08); }
     .soundbook-play-btn.playing { background: var(--muted); }
+    .soundbook-unsave-btn {
+      display: flex; align-items: center; justify-content: center;
+      width: 32px; height: 32px; border-radius: 50%;
+      background: transparent; color: #FF6B6B;
+      border: 1.5px solid #FFB3C6; cursor: pointer; font-size: .9rem;
+      transition: background .2s, transform .15s;
+    }
+    .soundbook-unsave-btn:hover { background: #FFF0F4; transform: scale(1.08); }
 
     /* ─── ADD RECORDING BUTTON ─── */
     .rec-add-btn {
@@ -532,6 +795,44 @@
       transition: background .18s, transform .15s;
     }
     .rec-add-btn:hover { background: #333; transform: translateY(-1px); }
+
+    /* ─── RELOCATION SOUNDS SECTION ─── */
+    .relocation-section { width: 100%; margin-bottom: 2.5rem; }
+    .relocation-section-label {
+      font-size: .54rem; letter-spacing: .22em; text-transform: uppercase;
+      color: var(--muted-lt); margin-bottom: 1rem; display: flex; align-items: center; gap: .5rem;
+    }
+    .relocation-section-city {
+      font-size: .54rem; letter-spacing: .14em; text-transform: uppercase;
+      color: var(--muted); background: #fff; border: 1px solid var(--stroke);
+      border-radius: 100px; padding: 2px 10px;
+    }
+    .relocation-sounds-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 1rem;
+    }
+    .relocation-sound-card {
+      aspect-ratio: 1 / 1;
+      display: flex; flex-direction: column; justify-content: space-between;
+      padding: 1.1rem; border-radius: 16px;
+      background: #F5F3F0; border: 1px solid var(--stroke);
+      font-family: var(--font); overflow: hidden;
+      transition: background .18s;
+    }
+    .relocation-sound-title {
+      font-size: .62rem; letter-spacing: .08em; text-transform: uppercase;
+      color: var(--dark); line-height: 1.4; flex: 1; margin-bottom: .5rem;
+    }
+    .btn-record-version {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-family: var(--font); font-size: .52rem; letter-spacing: .14em; text-transform: uppercase;
+      background: #fff; color: var(--muted); border: 1.5px solid var(--stroke);
+      border-radius: 100px; padding: .32rem .75rem; cursor: pointer;
+      transition: background .15s, border-color .15s, transform .1s; align-self: flex-start;
+    }
+    .btn-record-version:hover { background: #F5F3F0; border-color: var(--stroke-mid); transform: translateY(-1px); }
+    .btn-record-version-dot { width: 6px; height: 6px; border-radius: 50%; background: #FF5C78; flex-shrink: 0; }
 
     /* ─── RECORDED ITEMS ─── */
     .recorded-list { display: flex; flex-direction: column; gap: 1rem; width: 100%; }
@@ -592,112 +893,135 @@
       position: fixed; inset: 0; z-index: 600;
       background: rgba(26,26,26,.55); backdrop-filter: blur(10px);
       display: flex; align-items: center; justify-content: center;
-      opacity: 0; pointer-events: none;
-      transition: opacity .25s ease;
+      opacity: 0; pointer-events: none; transition: opacity .3s ease;
     }
     .rec-overlay.open { opacity: 1; pointer-events: auto; }
+
     .rec-modal {
-      background: #fff; border-radius: 20px;
-      width: min(500px, 92vw); padding: 2rem;
-      box-shadow: 0 24px 60px rgba(0,0,0,.18);
-      transform: translateY(14px);
-      transition: transform .25s ease;
-      display: flex; flex-direction: column; gap: 1.4rem;
+      position: relative; background: var(--bg);
+      border-radius: 24px; width: min(440px, 92vw);
+      padding: 3rem 3rem 2.6rem;
+      box-shadow: 0 32px 80px rgba(0,0,0,.2);
+      transform: translateY(20px); transition: transform .35s cubic-bezier(.22,1,.36,1);
     }
     .rec-overlay.open .rec-modal { transform: translateY(0); }
-    .rec-modal-header {
-      display: flex; align-items: center; justify-content: space-between;
-    }
-    .rec-modal-title {
-      font-family: var(--font); font-weight: 700;
-      font-size: .88rem; letter-spacing: .1em; text-transform: uppercase;
-      color: var(--title);
-    }
-    .rec-close-btn {
-      width: 32px; height: 32px; border-radius: 50%;
-      background: #F5F3F0; border: none; cursor: pointer;
-      font-size: 1rem; color: var(--muted);
-      display: flex; align-items: center; justify-content: center;
-      transition: background .15s, transform .15s;
-    }
-    .rec-close-btn:hover { background: var(--stroke); transform: scale(1.08); }
 
-    /* waveform canvas */
+    /* close — top right, matches app dark btn */
+    .rec-close-btn {
+      position: absolute; top: 1.4rem; right: 1.4rem;
+      width: 34px; height: 34px; border-radius: 50%;
+      background: var(--dark-btn); border: none; cursor: pointer;
+      font-size: .68rem; color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      transition: opacity .2s;
+    }
+    .rec-close-btn:hover { opacity: .72; }
+
+    /* eyebrow label */
+    .rec-eyebrow {
+      font-family: var(--font); font-size: .5rem; letter-spacing: .26em;
+      text-transform: uppercase; color: var(--muted-lt);
+      display: block; margin-bottom: 2rem;
+    }
+
+    /* waveform */
     .rec-waveform {
-      width: 100%; height: 72px; border-radius: 12px;
-      background: #F7F5FF; position: relative;
-      display: flex; align-items: center; justify-content: center; overflow: hidden;
+      width: 100%; height: 72px; border-radius: 14px;
+      background: #F0EDE8; border: 1.5px solid var(--stroke);
+      position: relative; display: flex; align-items: center; justify-content: center;
+      overflow: hidden; margin-bottom: 1.6rem;
     }
     .rec-waveform canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
     .rec-waveform-hint {
-      font-size: .58rem; letter-spacing: .16em; text-transform: uppercase;
+      font-size: .48rem; letter-spacing: .2em; text-transform: uppercase;
       color: var(--muted-lt); position: relative; z-index: 1;
-      transition: opacity .3s;
     }
 
+    /* timer */
     .rec-timer {
-      font-family: var(--font); font-weight: 700;
-      font-size: 2.4rem; letter-spacing: .06em;
+      font-family: var(--font); font-weight: 800; font-size: 4.8rem;
       color: var(--title); text-align: center; line-height: 1;
+      margin-bottom: 2.4rem; letter-spacing: .02em;
     }
 
-    /* controls */
-    .rec-controls {
-      display: flex; align-items: center; justify-content: center; gap: .75rem;
-    }
-    .rec-btn {
-      font-family: var(--font); font-size: .6rem; letter-spacing: .12em; text-transform: uppercase;
-      border-radius: 100px; cursor: pointer; border: none; padding: 9px 20px;
-      transition: background .18s, transform .15s; display: inline-flex; align-items: center; gap: 6px;
-    }
-    .rec-btn:hover { transform: translateY(-1px); }
-    .rec-btn-ghost { background: #F5F3F0; color: var(--muted); }
-    .rec-btn-ghost:hover { background: var(--stroke); }
-    .rec-btn-primary { background: var(--dark-btn); color: #fff; padding: 11px 28px; }
-    .rec-btn-primary:hover { background: #333; }
+    /* record button */
+    .rec-main-row { display: flex; justify-content: center; margin-bottom: 2rem; }
     .rec-main-btn {
-      width: 62px; height: 62px; border-radius: 50%; border: none; cursor: pointer;
-      font-size: 1.3rem; display: flex; align-items: center; justify-content: center;
-      transition: background .2s, transform .15s; flex-shrink: 0;
-      background: #FF9EB0; color: #fff;
+      width: 92px; height: 92px; border-radius: 50%; border: none; cursor: pointer;
+      font-size: 1.8rem; display: flex; align-items: center; justify-content: center;
+      background: var(--dark-btn); color: #fff;
+      box-shadow: 0 6px 24px rgba(26,26,26,.22);
+      transition: transform .2s, box-shadow .2s;
     }
-    .rec-main-btn:hover { transform: scale(1.06); }
-    .rec-main-btn.is-recording { background: #FF5C78; }
-    .rec-main-btn.is-paused   { background: #85C8FF; }
+    .rec-main-btn:hover { transform: scale(1.06); box-shadow: 0 10px 30px rgba(26,26,26,.3); }
+    .rec-main-btn.is-recording { background: #D94F4F; box-shadow: 0 6px 24px rgba(217,79,79,.3); }
+    .rec-main-btn.is-paused { background: #5588BB; box-shadow: 0 6px 24px rgba(85,136,187,.3); }
 
-    /* step 2 form */
-    .rec-save-form { display: flex; flex-direction: column; gap: 1rem; }
+    /* ── universal button ── */
+    .rm-btn {
+      font-family: var(--font); font-size: .58rem; letter-spacing: .14em; text-transform: uppercase;
+      height: 52px; border-radius: 12px; cursor: pointer;
+      display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+      flex: 1; transition: opacity .15s, background .15s;
+    }
+    .rm-btn-outline {
+      background: #fff; color: var(--muted); border: 1.5px solid var(--stroke);
+    }
+    .rm-btn-outline:hover { background: #F5F3F0; color: var(--dark); }
+    .rm-btn-solid {
+      background: var(--dark-btn); color: #fff; border: none;
+    }
+    .rm-btn-solid:hover { opacity: .82; }
+    .rm-btn-full { flex: none; width: 100%; }
+
+    /* rows */
+    .rec-secondary-row { display: flex; gap: 1rem; margin-bottom: 1rem; }
+    .rec-save-row { display: flex; }
+
+    /* ── step 2 form ── */
+    .rec-save-form { display: flex; flex-direction: column; gap: 1.6rem; }
+    .rec-field-label {
+      font-size: .5rem; letter-spacing: .16em; text-transform: uppercase;
+      color: var(--muted-lt); display: block; margin-bottom: .5rem;
+    }
     .rec-input {
-      width: 100%; padding: .75rem 1rem; border-radius: 10px;
+      width: 100%; height: 52px; padding: 0 1rem; border-radius: 12px;
       border: 1.5px solid var(--stroke); background: #fff;
-      font-family: var(--font); font-size: .78rem; letter-spacing: .04em;
+      font-family: var(--font); font-size: .78rem; letter-spacing: .03em;
       color: var(--dark); outline: none; transition: border-color .2s;
+      box-sizing: border-box;
     }
-    .rec-input:focus { border-color: var(--stroke-mid); }
+    .rec-input:focus { border-color: var(--dark); }
     .rec-input::placeholder { color: var(--muted-lt); }
-    .rec-cover-label {
-      font-size: .56rem; letter-spacing: .16em; text-transform: uppercase;
-      color: var(--muted-lt); margin-bottom: .4rem; display: block;
+    .rec-category-grid { display: flex; flex-wrap: wrap; gap: .45rem; }
+    .rec-cat-btn {
+      font-family: var(--font); font-size: .53rem; letter-spacing: .1em; text-transform: uppercase;
+      height: 36px; padding: 0 16px; border-radius: 8px;
+      background: #fff; color: var(--muted); border: 1.5px solid var(--stroke);
+      cursor: pointer; display: inline-flex; align-items: center;
+      transition: background .15s, color .15s;
     }
+    .rec-cat-btn:hover { background: #F5F3F0; color: var(--dark); }
+    .rec-cat-btn.selected { background: var(--dark-btn); color: #fff; border-color: transparent; }
     .rec-cover-upload {
-      border: 2px dashed var(--stroke); border-radius: 12px;
-      padding: 1.2rem; text-align: center; cursor: pointer;
-      transition: border-color .2s, background .2s; position: relative;
-      display: flex; flex-direction: column; align-items: center; gap: .5rem;
+      position: relative; width: 100%; height: 52px; border-radius: 12px;
+      border: 1.5px solid var(--stroke); background: #fff;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; overflow: hidden; transition: border-color .2s;
     }
-    .rec-cover-upload:hover { border-color: var(--stroke-mid); background: #F7F5FF; }
-    .rec-cover-upload input[type=file] {
-      position: absolute; inset: 0; opacity: 0; cursor: pointer;
-    }
-    .rec-cover-preview {
-      width: 100%; max-height: 110px; object-fit: cover;
-      border-radius: 8px; display: none;
+    .rec-cover-upload:hover { border-color: var(--dark); }
+    .rec-cover-upload input[type="file"] {
+      position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;
     }
     .rec-cover-placeholder-text {
-      font-size: .6rem; letter-spacing: .12em; text-transform: uppercase;
-      color: var(--muted-lt); line-height: 1.8;
+      font-family: var(--font); font-size: .52rem; letter-spacing: .14em;
+      text-transform: uppercase; color: var(--muted-lt); pointer-events: none;
     }
-    .rec-save-actions { display: flex; gap: .6rem; justify-content: flex-end; }
+    .rec-cover-preview {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      object-fit: cover; display: none;
+    }
+    .rec-save-actions { display: flex; gap: 1rem; margin-top: 2rem; }
 
     @keyframes fadeUp   { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
     @keyframes fadeDown { from{opacity:0;transform:translateY(-8px)}  to{opacity:1;transform:translateY(0)} }
@@ -817,7 +1141,7 @@
         <div class="nav-dropdown-wrap" id="childDropWrap">
           <button class="nav-link-btn" id="soundBookBtn"><span class="nav-link-dot"></span>My Sound Book</button>
         </div>
-        <button class="nav-link-btn" id="dailyMissionBtn"><span class="nav-link-dot"></span>Daily Mission</button>
+        <button class="nav-link-btn" id="dailyMissionBtn"><span class="nav-link-dot"></span>My Daily Mission</button>
       </div>
       <!-- shown when parent was selected on welcome -->
       <div id="parentNav" style="display:none;gap:.5rem;">
@@ -845,13 +1169,15 @@
       </div>
 
       <h2 class="welcome-title">Welcome :)</h2>
-      <p class="welcome-sub">what's your name?</p>
 
       <div class="welcome-group">
+        <p class="welcome-sub">what's your name?</p>
         <div class="welcome-name-wrap">
           <input class="welcome-input" type="text" id="welcomeName" placeholder="your name" autocomplete="off" spellcheck="false" />
+          <div class="name-recent-dropdown" id="nameRecentDropdown"></div>
         </div>
 
+        <p class="welcome-role-label">Choose your role</p>
         <div class="welcome-mode-btns">
           <button class="btn-mode-child" id="btnChild">
             <svg class="mode-icon" width="28" height="28" viewBox="0 0 28 28" fill="none">
@@ -894,7 +1220,10 @@
   <section id="type-screen" class="screen">
     <div class="moving-label">
       <span>I'm&nbsp;moving&nbsp;to</span>
-      <div><input id="city-input" type="text" placeholder="your city" autocomplete="off" spellcheck="false" /></div>
+      <div class="city-input-wrap">
+        <input id="city-input" type="text" placeholder="your city" autocomplete="off" spellcheck="false" />
+        <div class="city-recent-dropdown" id="cityRecentDropdown"></div>
+      </div>
       <span>—</span>
     </div>
     <p class="type-hint">Type a city name and press Enter</p>
@@ -919,7 +1248,13 @@
       <span class="sound-back-arrow">←</span> Back to cities
     </button>
     <div class="sound-city-name" id="soundCityName">New York</div>
-    <div class="sound-city-sub">Iconic sounds of this city</div>
+    <div class="sound-refresh-row">
+      <div class="sound-city-sub">Iconic sounds of this city</div>
+      <div style="display:flex;align-items:center;gap:.6rem;">
+        <button class="btn-relocation" id="relocationBtn"><span class="btn-relocation-icon">⌂</span> My new city</button>
+        <button id="refreshSoundsBtn">↻ Refresh</button>
+      </div>
+    </div>
     <div class="sound-cards-grid" id="soundCardsGrid"></div>
     <div class="facts-section" id="factsSection" style="display:none;"></div>
   </section>
@@ -939,6 +1274,62 @@
     </div>
     <div class="soundbook-panel active" id="panel-saved"></div>
     <div class="soundbook-panel" id="panel-recorded"></div>
+  </section>
+
+  <!-- DAILY MISSION SCREEN -->
+  <section id="daily-mission-screen" class="screen">
+    <button class="dm-back" id="dmBackBtn"><span>←</span> Back</button>
+    <div class="dm-header">
+      <div class="dm-eyebrow">My Daily Mission</div>
+      <div class="dm-title">Today's Challenge</div>
+      <div class="dm-date" id="dmDate"></div>
+    </div>
+    <div class="dm-card">
+      <div class="dm-card-deco">🎶</div>
+      <div class="dm-card-tag">⌂ Sound Explorer</div>
+      <div class="dm-mission-text" id="dmMissionText"></div>
+      <div class="dm-mission-hint" id="dmMissionHint"></div>
+      <div class="dm-actions">
+        <button class="dm-record-btn" id="dmRecordBtn"><span class="dm-record-dot"></span> Record it</button>
+        <button class="dm-skip-btn" id="dmSkipBtn">Skip for today</button>
+      </div>
+    </div>
+    <div class="dm-streak" id="dmStreak"></div>
+    <div class="dm-ask" id="dmAsk" style="display:none;">
+      <div class="dm-ask-label">Explore <span id="dmAskCityName"></span></div>
+      <div class="dm-ask-chips" id="dmAskChips"></div>
+      <div class="dm-ask-input-row">
+        <input class="dm-ask-input" id="dmAskInput" placeholder="Ask anything about this city…" />
+        <button class="dm-ask-send" id="dmAskSend">→</button>
+      </div>
+      <div class="dm-ask-response" id="dmAskResponse" style="display:none;"></div>
+    </div>
+  </section>
+
+  <!-- PARENT DASHBOARD SCREEN -->
+  <section id="parent-dashboard-screen" class="screen">
+    <div class="pd-header">
+      <div class="pd-eyebrow">Parent View</div>
+      <div class="pd-title" id="pdTitle">My Dashboard</div>
+    </div>
+
+    <div class="pd-section">
+      <div class="pd-section-label">Today's Mission</div>
+      <div class="pd-mission-card">
+        <div class="pd-mission-title" id="pdMissionText"></div>
+        <div class="pd-mission-hint" id="pdMissionHint"></div>
+        <div class="pd-streak" id="pdStreak"></div>
+        <div class="pd-progress-bar-wrap">
+          <div class="pd-progress-bar" id="pdProgressBar"></div>
+        </div>
+        <div class="pd-progress-label" id="pdProgressLabel"></div>
+      </div>
+    </div>
+
+    <div class="pd-section">
+      <div class="pd-section-label">Child's Sound Collection</div>
+      <div id="pdSoundsGrid" class="pd-sounds-grid"></div>
+    </div>
   </section>
 
   <!-- FOOTER -->
@@ -971,251 +1362,351 @@
       { title: 'Crosswalk Signal Beep', desc: 'The rapid ticking pedestrian signal at a Manhattan intersection.', file: 'newyork_crosswalk_beep.mp3', fact: 'That fast beeping sound is there to help people know when it is safe to cross, even without looking at the light.' },
       { title: 'Subway Station Busker', desc: 'A saxophonist echoing through the tiled walls of a downtown station.', file: 'newyork_subway_busker.mp3', fact: 'Sometimes, on the way to school or work, a subway station can suddenly feel like a tiny concert hall.' },
       { title: 'Street Traffic & Horns', desc: 'Layered vehicle horns and engine rumble on a midtown block.', file: 'newyork_street_traffic.mp3', fact: 'Even when you are standing still, the city around you is still moving.' },
+      { title: 'Central Park Carousel', desc: 'The vintage Venetian carousel organ spinning under the trees in Central Park.', file: 'newyork_centralpark_carousel.mp3', fact: 'The Central Park Carousel has been spinning since 1871 — that is over 150 years of kids riding horses!', search: 'vintage carousel organ fairground music' },
+      { title: 'Times Square Crowd', desc: 'The overwhelming buzz of tourists, LED screens, and street performers at the crossroads of the world.', file: 'newyork_timessquare_crowd.mp3', fact: 'About 380,000 people walk through Times Square every single day — more than the whole population of some small countries!', search: 'busy tourist crowd city square ambient' },
     ],
     'Boston': [
-      { title: 'MBTA Green Line', desc: 'The distinctive screech of the T rounding a surface curve.', file: 'boston_mbta_greenline.mp3' },
-      { title: 'Faneuil Hall Crowd', desc: 'Marketplace chatter and busker music near the waterfront.', file: 'boston_faneuil_crowd.mp3' },
-      { title: 'Harbor Foghorn', desc: 'A deep foghorn cutting through Boston Harbor on a misty morning.', file: 'boston_harbor_foghorn.mp3' },
+      { title: 'MBTA Green Line', desc: 'The distinctive screech of the T rounding a surface curve.', file: 'boston_mbta_greenline.mp3', fact: 'The MBTA Green Line is one of the oldest subway lines in America — it first ran in 1897, making it part of the very first underground railway in the entire United States!' },
+      { title: 'Faneuil Hall Crowd', desc: 'Marketplace chatter and busker music near the waterfront.', file: 'boston_faneuil_crowd.mp3', fact: 'Faneuil Hall has been a busy marketplace and meeting place since 1742 — American patriots like Samuel Adams gave famous speeches there before the Revolution!' },
+      { title: 'Harbor Foghorn', desc: 'A deep foghorn cutting through Boston Harbor on a misty morning.', file: 'boston_harbor_foghorn.mp3', fact: 'Foghorns were invented to warn ships in thick fog — their deep booming sound can travel for miles across the water so sailors know where the shore is!' },
+      { title: 'Fenway Park Crowd', desc: 'Red Sox fans erupting in cheers inside the oldest ballpark in Major League Baseball.', file: 'boston_fenway_crowd.mp3', fact: 'Fenway Park opened in 1912 — the same year the Titanic sank — and fans have been cheering there ever since!', search: 'baseball stadium crowd cheer organ' },
+      { title: 'Freedom Trail Footsteps', desc: 'Tourists walking the brick-lined trail past colonial-era landmarks on a breezy afternoon.', file: 'boston_freedom_trail.mp3', fact: 'The Freedom Trail is a 2.5-mile red line painted right on the sidewalk so you can follow it like a treasure map through history.', search: 'tourist footsteps cobblestone historic street' },
     ],
     'Philadelphia': [
-      { title: 'SEPTA Market-Frankford', desc: 'The elevated rail thundering over street-level traffic.', file: 'philadelphia_septa_train.mp3' },
-      { title: 'South Street Vendor', desc: 'Street food vendors and weekend market crowd noise.', file: 'philadelphia_southstreet_vendor.mp3' },
-      { title: 'Liberty Bell Area', desc: 'Tour guide voices and footsteps around the historic landmark.', file: 'philadelphia_liberty_bell.mp3' },
+      { title: 'SEPTA Market-Frankford', desc: 'The elevated rail thundering over street-level traffic.', file: 'philadelphia_septa_train.mp3', fact: 'The Market-Frankford Line runs above the streets on a giant metal structure called an el — short for "elevated" — so passengers can look right down into the city below!' },
+      { title: 'South Street Vendor', desc: 'Street food vendors and weekend market crowd noise.', file: 'philadelphia_southstreet_vendor.mp3', fact: 'South Street in Philadelphia has been a lively spot for artists, musicians, and food vendors for decades — it is famous for being the place where anything goes!' },
+      { title: 'Liberty Bell Area', desc: 'Tour guide voices and footsteps around the historic landmark.', file: 'philadelphia_liberty_bell.mp3', fact: 'The Liberty Bell has a famous crack in it — and no one knows exactly how it got there, making it one of history\'s most mysterious symbols of freedom!' },
+      { title: 'Philly Cheesesteak Grill', desc: 'Flat-top sizzle, onion scrape, and lunch-crowd chatter at an iconic cheesesteak counter.', file: 'philadelphia_cheesesteak_grill.mp3', fact: 'Philadelphia cheesesteaks were invented in the 1930s and are now so famous that people fly in from across the world just to eat one!', search: 'griddle sizzle kitchen grill busy counter' },
+      { title: 'Reading Terminal Market', desc: 'The lively hum of vendors, shoppers, and sizzling food stalls inside one of America\'s oldest public markets.', file: 'philadelphia_reading_terminal.mp3', fact: 'Reading Terminal Market has been open since 1893 — over 130 years of fresh food and friendly vendors under one historic roof.', search: 'indoor market crowd vendor chatter food hall' },
     ],
     'Newark': [
-      { title: 'Penn Station Announcement', desc: 'NJ Transit PA announcements echoing through the terminal.', file: 'newark_penn_station.mp3' },
-      { title: 'Port Crane Operations', desc: 'Container cranes and vessel horns from the Port of Newark.', file: 'newark_port_crane.mp3' },
-      { title: 'Ironbound Street Market', desc: 'Portuguese-Brazilian street market ambience and chatter.', file: 'newark_ironbound_market.mp3' },
+      { title: 'Penn Station Announcement', desc: 'NJ Transit PA announcements echoing through the terminal.', file: 'newark_penn_station.mp3', fact: 'Newark Penn Station is one of the busiest train stations in the country — thousands of commuters pass through it every single day to travel between New Jersey and New York!' },
+      { title: 'Port Crane Operations', desc: 'Container cranes and vessel horns from the Port of Newark.', file: 'newark_port_crane.mp3', fact: 'The Port of Newark is one of the busiest ports in the United States — giant cranes lift shipping containers the size of school buses right off enormous cargo ships!' },
+      { title: 'Ironbound Street Market', desc: 'Portuguese-Brazilian street market ambience and chatter.', file: 'newark_ironbound_market.mp3', fact: 'Newark\'s Ironbound neighborhood gets its nickname from the railroad tracks that used to surround it — today it is famous for amazing Portuguese and Brazilian food and festivals!' },
+      { title: 'Newark Airport Takeoff', desc: 'A commercial jet roaring down the runway and lifting into the sky overhead.', file: 'newark_airport_takeoff.mp3', fact: 'Newark Liberty Airport is one of the three major airports serving New York City and handles over 40 million passengers a year!', search: 'airplane takeoff jet engine runway airport' },
+      { title: 'Passaic River Waterfront', desc: 'Lapping water, distant traffic, and birdsong along the industrial riverbank at dusk.', file: 'newark_passaic_river.mp3', fact: 'The Passaic River runs right through Newark and has been a source of trade and travel for hundreds of years.', search: 'urban river waterfront ambient birds water lapping' },
     ],
     'Providence': [
-      { title: 'WaterFire Crowd', desc: 'Crowd murmurs and crackling bonfires along the Providence River.', file: 'providence_waterfire.mp3' },
-      { title: 'College Hill Bells', desc: 'Brown University carillon bells drifting over the hill.', file: 'providence_college_bells.mp3' },
-      { title: 'Narragansett Ferry', desc: 'Horn blast and engine churn of the bay ferry departure.', file: 'providence_bay_ferry.mp3' },
+      { title: 'WaterFire Crowd', desc: 'Crowd murmurs and crackling bonfires along the Providence River.', file: 'providence_waterfire.mp3', fact: 'WaterFire Providence lights over 100 bonfires right on the surface of the river — the flames float on the water and create a magical glow that draws crowds from all over the world!' },
+      { title: 'College Hill Bells', desc: 'Brown University carillon bells drifting over the hill.', file: 'providence_college_bells.mp3', fact: 'Brown University was founded in 1764 — before the United States even existed — and its bells have been ringing over Providence for more than 250 years!' },
+      { title: 'Narragansett Ferry', desc: 'Horn blast and engine churn of the bay ferry departure.', file: 'providence_bay_ferry.mp3', fact: 'Narragansett Bay is so large it stretches nearly 30 miles from Providence to the open ocean — ferries have been crossing its waters for hundreds of years!' },
+      { title: 'RISD Art Market Buzz', desc: 'Student chatter and acoustic guitar at an outdoor art fair near the design school.', file: 'providence_risd_market.mp3', fact: 'The Rhode Island School of Design is one of the most famous art schools in the world — many well-known artists and designers studied there!', search: 'outdoor art fair crowd acoustic guitar busker' },
+      { title: 'Providence Train Station', desc: 'Amtrak Acela arrival announcement and echoing footsteps in the grand hall.', file: 'providence_train_station.mp3', fact: 'Providence is perfectly placed between Boston and New York, so trains pass through all day long connecting two of America\'s biggest cities.', search: 'train station arrival announcement echoing hall' },
     ],
     'Hartford': [
-      { title: 'Bushnell Park Carousel', desc: 'Vintage carousel organ music in the city center park.', file: 'hartford_carousel_organ.mp3' },
-      { title: 'Downtown CTfastrak Bus', desc: 'CTfastrak bus engine and stop announcement on Main St.', file: 'hartford_ctfastrak_bus.mp3' },
-      { title: 'Connecticut River Paddle', desc: 'Water dripping and river ambience near the boat launch.', file: 'hartford_river_paddle.mp3' },
+      { title: 'Bushnell Park Carousel', desc: 'Vintage carousel organ music in the city center park.', file: 'hartford_carousel_organ.mp3', fact: 'The Bushnell Park Carousel was built in 1914 and is one of the few remaining carousels with a working Wurlitzer band organ — it plays music all by itself using pipes and air!' },
+      { title: 'Downtown CTfastrak Bus', desc: 'CTfastrak bus engine and stop announcement on Main St.', file: 'hartford_ctfastrak_bus.mp3', fact: 'CTfastrak is a special bus that gets its own dedicated lane on the road — so it never gets stuck in traffic and can zoom past all the cars!' },
+      { title: 'Connecticut River Paddle', desc: 'Water dripping and river ambience near the boat launch.', file: 'hartford_river_paddle.mp3', fact: 'The Connecticut River is the longest river in New England, flowing 407 miles from the Canadian border all the way down to Long Island Sound!' },
+      { title: 'Insurance District Traffic', desc: 'Midday pedestrian and vehicle flow through Hartford\'s historic insurance company corridor.', file: 'hartford_insurance_traffic.mp3', fact: 'Hartford is known as the "Insurance Capital of the World" because so many major insurance companies were founded there!', search: 'city street pedestrian traffic midday urban' },
+      { title: 'Mark Twain House Tour', desc: 'Creaking Victorian floorboards and hushed tour-guide narration inside the author\'s historic home.', file: 'hartford_twain_house.mp3', fact: 'Mark Twain wrote "Adventures of Huckleberry Finn" and "The Adventures of Tom Sawyer" right here in Hartford — books kids still read today!', search: 'historic house interior creaking floors quiet tour' },
     ],
     'Buffalo': [
-      { title: 'Niagara Falls Roar', desc: 'The constant thunder of nearby Niagara carried on the wind.', file: 'buffalo_niagara_roar.mp3' },
-      { title: 'Sabres Arena Crowd', desc: 'Hockey game roar and goal horn inside KeyBank Center.', file: 'buffalo_sabres_crowd.mp3' },
-      { title: 'Erie Canal Towboat', desc: 'Low horn and churning wake of a canal boat passing through.', file: 'buffalo_erie_canal.mp3' },
+      { title: 'Niagara Falls Roar', desc: 'The constant thunder of nearby Niagara carried on the wind.', file: 'buffalo_niagara_roar.mp3', fact: 'More than six million gallons of water pour over Niagara Falls every single minute — that is enough water to fill an Olympic swimming pool in less than two seconds!' },
+      { title: 'Sabres Arena Crowd', desc: 'Hockey game roar and goal horn inside KeyBank Center.', file: 'buffalo_sabres_crowd.mp3', fact: 'Buffalo is so close to Canada that many hockey fans cross the border to cheer — the Sabres and their fans share a love of hockey with their Canadian neighbors!' },
+      { title: 'Erie Canal Towboat', desc: 'Low horn and churning wake of a canal boat passing through.', file: 'buffalo_erie_canal.mp3', fact: 'The Erie Canal was dug by hand in the 1820s and connected the Great Lakes to New York City — it helped make the whole region boom and changed America forever!' },
+      { title: 'Bills Stadium Crowd', desc: 'Thunderous crowd roar and snowflakes swirling during a cold-weather Bills game.', file: 'buffalo_bills_stadium.mp3', fact: 'Buffalo Bills fans are famous for being some of the loudest and most dedicated fans in the NFL, even when it is freezing cold outside!', search: 'football stadium crowd roar outdoor game' },
+      { title: 'First Ward Snow Street', desc: 'Boots crunching fresh snow and a distant plow scraping a Buffalo side street.', file: 'buffalo_snow_street.mp3', fact: 'Buffalo gets so much snow that the city has a whole team of snowplows working around the clock to keep the streets clear in winter!', search: 'snow footsteps winter street plow ambient' },
     ],
     'Albany': [
-      { title: 'State Capitol Bell', desc: 'The hour bell ringing across the Empire State Plaza.', file: 'albany_capitol_bell.mp3' },
-      { title: 'Hudson River Ferry', desc: 'Ferry horn and water slap on the Hudson River crossing.', file: 'albany_hudson_ferry.mp3' },
-      { title: 'Tulip Festival Crowd', desc: 'Washington Park crowd noise during the spring festival.', file: 'albany_tulip_festival.mp3' },
+      { title: 'State Capitol Bell', desc: 'The hour bell ringing across the Empire State Plaza.', file: 'albany_capitol_bell.mp3', fact: 'New York\'s State Capitol building took 32 years to build and cost $25 million — making it the most expensive government building in the entire United States when it was completed in 1899!' },
+      { title: 'Hudson River Ferry', desc: 'Ferry horn and water slap on the Hudson River crossing.', file: 'albany_hudson_ferry.mp3', fact: 'The Hudson River flows all the way from the Adirondack Mountains down to New York City — ferries and boats have been crossing it near Albany for over 400 years!' },
+      { title: 'Tulip Festival Crowd', desc: 'Washington Park crowd noise during the spring festival.', file: 'albany_tulip_festival.mp3', fact: 'Albany\'s Tulip Festival celebrates the city\'s Dutch heritage — the Netherlands gave Albany tulip bulbs as a friendship gift, and now thousands bloom in Washington Park every spring!' },
+      { title: 'Amtrak Empire Service', desc: 'Amtrak departure whistle and diesel rumble leaving Albany-Rensselaer station.', file: 'albany_amtrak_empire.mp3', fact: 'Trains running along the Hudson River from Albany to New York City follow one of the most scenic rail routes on the entire East Coast!', search: 'amtrak train departure diesel whistle station' },
+      { title: 'Lark Street Café Scene', desc: 'Sidewalk café chatter, coffee cups clinking, and traffic on the bohemian strip.', file: 'albany_lark_street.mp3', fact: 'Albany has been the capital of New York State since 1797, making it one of the oldest continuously operating state capitals in the US.', search: 'sidewalk cafe outdoor chatter coffee cups clinking' },
     ],
     'Pittsburgh': [
-      { title: 'Duquesne Incline', desc: 'The cable and pulley groan of the historic hillside funicular.', file: 'pittsburgh_incline.mp3' },
-      { title: 'Steel Bridge Traffic', desc: 'Cars crossing the yellow bridge grid over the Allegheny River.', file: 'pittsburgh_steel_bridge.mp3' },
-      { title: 'PNC Park Crowd', desc: 'Ballpark ambience and public address echo on a game day.', file: 'pittsburgh_pnc_park.mp3' },
+      { title: 'Duquesne Incline', desc: 'The cable and pulley groan of the historic hillside funicular.', file: 'pittsburgh_incline.mp3', fact: 'The Duquesne Incline has been climbing up Pittsburgh\'s steep hillside since 1877 — it carries passengers up at a 30-degree angle, almost like riding a roller coaster very slowly!' },
+      { title: 'Steel Bridge Traffic', desc: 'Cars crossing the yellow bridge grid over the Allegheny River.', file: 'pittsburgh_steel_bridge.mp3', fact: 'Pittsburgh paints all its bridges yellow to match the black and yellow colors of the city — which also happen to be the colors of every single Pittsburgh sports team!' },
+      { title: 'PNC Park Crowd', desc: 'Ballpark ambience and public address echo on a game day.', file: 'pittsburgh_pnc_park.mp3', fact: 'PNC Park is considered one of the most beautiful baseball stadiums in the world — from the seats you can see the Pittsburgh skyline and three rivers all at once!' },
+      { title: 'Three Rivers Kayak', desc: 'Paddle strokes and water echoes where the Allegheny and Monongahela rivers meet to form the Ohio.', file: 'pittsburgh_three_rivers.mp3', fact: 'Pittsburgh sits at the exact spot where two rivers join to make a third — that is why it is nicknamed "The City of Bridges," with over 440 bridges!', search: 'river kayak paddle water outdoor nature' },
+      { title: 'Primanti Bros Kitchen', desc: 'Meat sizzle, bread press, and lunch counter noise at the legendary 24-hour sandwich shop.', file: 'pittsburgh_primanti_kitchen.mp3', fact: 'Primanti Brothers sandwiches are so famous in Pittsburgh that they put coleslaw and french fries right inside the sandwich — a Pittsburgh tradition since 1933!', search: 'diner kitchen sizzle counter busy lunch noise' },
     ],
     'Baltimore': [
-      { title: 'Inner Harbor Seagulls', desc: 'Gulls calling over the Chesapeake waterfront boardwalk.', file: 'baltimore_inner_harbor.mp3' },
-      { title: 'Charm City Circulator', desc: 'Electric bus hum and door chime on the free bus loop.', file: 'baltimore_circulator.mp3' },
-      { title: 'Fells Point Market', desc: 'Weekend market chatter, boat bells, and cobblestone footsteps.', file: 'baltimore_fells_point.mp3' },
+      { title: 'Inner Harbor Seagulls', desc: 'Gulls calling over the Chesapeake waterfront boardwalk.', file: 'baltimore_inner_harbor.mp3', fact: 'Baltimore\'s Inner Harbor used to be a busy industrial port, but it was transformed into a beautiful waterfront park where families can visit ships, aquariums, and museums!' },
+      { title: 'Charm City Circulator', desc: 'Electric bus hum and door chime on the free bus loop.', file: 'baltimore_circulator.mp3', fact: 'The Charm City Circulator is completely free to ride — Baltimore runs electric buses around the city so everyone can get where they need to go without paying a single penny!' },
+      { title: 'Fells Point Market', desc: 'Weekend market chatter, boat bells, and cobblestone footsteps.', file: 'baltimore_fells_point.mp3', fact: 'Fells Point is one of Baltimore\'s oldest neighborhoods and its cobblestone streets are original — those same bumpy stones have been there since colonial times!' },
+      { title: 'Preakness Stakes Crowd', desc: 'Thoroughbred hooves thundering past the grandstand at Pimlico Race Course.', file: 'baltimore_preakness_crowd.mp3', fact: 'The Preakness Stakes is held in Baltimore every year and is the second leg of horse racing\'s Triple Crown — one of the most exciting two minutes in sports!', search: 'horse racing crowd grandstand hooves track' },
+      { title: 'Maryland Crab Shack', desc: 'Wooden mallets cracking blue crabs and lively table conversation at a waterfront seafood shack.', file: 'baltimore_crab_shack.mp3', fact: 'Maryland blue crabs are so delicious and important to Baltimore culture that locals eat them with wooden mallets and consider it an art form!', search: 'seafood restaurant busy crowd table noise mallet' },
     ],
     'Atlanta': [
-      { title: 'MARTA Rail Train', desc: 'MARTA heavy-rail doors, chime, and acceleration in the tunnel.', file: 'atlanta_marta_train.mp3' },
-      { title: 'Peachtree Street Crowd', desc: 'Weekend pedestrian crowd and distant music on Peachtree.', file: 'atlanta_peachtree_crowd.mp3' },
-      { title: 'Hartsfield Airport PA', desc: 'Gate announcements and tram chime at the world\'s busiest airport.', file: 'atlanta_airport_pa.mp3' },
+      { title: 'MARTA Rail Train', desc: 'MARTA heavy-rail doors, chime, and acceleration in the tunnel.', file: 'atlanta_marta_train.mp3', fact: 'MARTA\'s rail system goes directly from downtown Atlanta all the way to the airport — you can hop off the plane and be in the heart of the city in less than 20 minutes!' },
+      { title: 'Peachtree Street Crowd', desc: 'Weekend pedestrian crowd and distant music on Peachtree.', file: 'atlanta_peachtree_crowd.mp3', fact: 'Atlanta has more than 70 streets with "Peachtree" in their name — even locals sometimes need a map to tell them apart!' },
+      { title: 'Hartsfield Airport PA', desc: 'Gate announcements and tram chime at the world\'s busiest airport.', file: 'atlanta_airport_pa.mp3', fact: 'Hartsfield-Jackson Atlanta Airport has been the world\'s busiest airport for over 20 years in a row — more than 100 million passengers pass through it every single year!' },
+      { title: 'Centennial Olympic Park Fountain', desc: 'Children splashing through the interactive fountain jets at the park built for the 1996 Olympics.', file: 'atlanta_olympic_fountain.mp3', fact: 'Atlanta hosted the Summer Olympics in 1996 and built Centennial Olympic Park as a gift to the city — now kids splash in the same fountains every summer!', search: 'interactive fountain children splashing outdoor park' },
+      { title: 'Sweet Auburn Street Jazz', desc: 'Vintage jazz drifting from a record shop on the historic street that shaped Atlanta\'s civil rights movement.', file: 'atlanta_sweet_auburn.mp3', fact: 'Sweet Auburn Avenue is where Dr. Martin Luther King Jr. was born and grew up — one of the most important streets in American history.', search: 'vintage jazz record shop street ambient' },
     ],
     'Miami': [
-      { title: 'Ocean Drive Bass', desc: 'Deep bass from an open-air club spilling onto the Art Deco strip.', file: 'miami_ocean_drive_bass.mp3' },
-      { title: 'PortMiami Cruise Horn', desc: 'A massive cruise ship horn echoing across Biscayne Bay.', file: 'miami_cruise_horn.mp3' },
-      { title: 'Little Havana Café', desc: 'Espresso machine, domino tiles slapping, and Spanish radio.', file: 'miami_little_havana.mp3' },
+      { title: 'Ocean Drive Bass', desc: 'Deep bass from an open-air club spilling onto the Art Deco strip.', file: 'miami_ocean_drive_bass.mp3', fact: 'Miami\'s South Beach has the largest collection of Art Deco buildings in the world — those colorful buildings with curved edges were mostly built in the 1930s and are now protected landmarks!' },
+      { title: 'PortMiami Cruise Horn', desc: 'A massive cruise ship horn echoing across Biscayne Bay.', file: 'miami_cruise_horn.mp3', fact: 'PortMiami is the busiest cruise port in the entire world — more people begin their cruise vacations here than anywhere else on the planet!' },
+      { title: 'Little Havana Café', desc: 'Espresso machine, domino tiles slapping, and Spanish radio.', file: 'miami_little_havana.mp3', fact: 'Little Havana in Miami is famous for its outdoor domino games — older Cuban men gather at Domino Park every single day to play and chat, just like they have for decades!' },
+      { title: 'Everglades Airboat', desc: 'The roar of an airboat fan propelling flat across sawgrass, with egrets startling from the reeds.', file: 'miami_everglades_airboat.mp3', fact: 'Airboats have no underwater propeller — they glide on a cushion of air using a giant fan, so they can travel over shallow swamps and grassy marshes!', search: 'airboat swamp marsh fan motor wetland' },
+      { title: 'Wynwood Walls Street Art', desc: 'Spray-paint hiss and hip-hop thumping from a open studio in the art district.', file: 'miami_wynwood_spray.mp3', fact: 'Wynwood Walls in Miami turned an old warehouse neighborhood into one of the world\'s most famous outdoor art galleries — all the murals are painted by famous street artists!', search: 'spray paint aerosol hiss graffiti street art hip hop background' },
     ],
     'Charlotte': [
-      { title: 'LYNX Light Rail', desc: 'Light rail bell and acceleration sound leaving Uptown station.', file: 'charlotte_lynx_lightrail.mp3' },
-      { title: 'NASCAR Engine Rev', desc: 'Stock car engine revving at Charlotte Motor Speedway.', file: 'charlotte_nascar_engine.mp3' },
-      { title: 'Rooftop Bar Crowd', desc: 'Uptown rooftop chatter with city wind and ambient traffic.', file: 'charlotte_rooftop_crowd.mp3' },
+      { title: 'LYNX Light Rail', desc: 'Light rail bell and acceleration sound leaving Uptown station.', file: 'charlotte_lynx_lightrail.mp3', fact: 'Charlotte\'s LYNX Blue Line was the first light rail line in the Carolinas when it opened in 2007 — and it has been so popular that the city keeps adding more stations!' },
+      { title: 'NASCAR Engine Rev', desc: 'Stock car engine revving at Charlotte Motor Speedway.', file: 'charlotte_nascar_engine.mp3', fact: 'Charlotte is considered the home of NASCAR — over 90 percent of all NASCAR racing teams have their headquarters right in the Charlotte area!' },
+      { title: 'Rooftop Bar Crowd', desc: 'Uptown rooftop chatter with city wind and ambient traffic.', file: 'charlotte_rooftop_crowd.mp3', fact: 'Charlotte\'s skyline has grown so fast that it now has one of the tallest downtown skylines in the entire Southeast — there are rooftop spots high enough to see for miles!' },
+      { title: 'U.S. National Whitewater Center', desc: 'Rushing artificial rapids and safety-kayak paddle strokes at the Olympic training facility.', file: 'charlotte_whitewater_center.mp3', fact: 'Charlotte has one of the world\'s largest artificial whitewater rivers — athletes train there for the Olympics right in the middle of the city!', search: 'whitewater rapids kayak rushing water outdoor' },
+      { title: 'Mint Museum Atrium', desc: 'Quiet footsteps and hushed voices echoing through the sky-lit gallery atrium.', file: 'charlotte_mint_museum.mp3', fact: 'The Mint Museum in Charlotte was originally a real US Mint where gold coins were made — Charlotte was the center of America\'s first gold rush!', search: 'museum interior quiet footsteps echoing atrium' },
     ],
     'Nashville': [
-      { title: 'Honky-Tonk Guitar', desc: 'Live country guitar spilling out of a Lower Broadway bar.', file: 'nashville_honkytonk_guitar.mp3' },
-      { title: 'Broadway Neon Crowd', desc: 'Dense weekend crowd noise and competing bar music on Broadway.', file: 'nashville_broadway_crowd.mp3' },
-      { title: 'Grand Ole Opry Bell', desc: 'The stage bell and crowd applause inside the Opry.', file: 'nashville_opry_bell.mp3' },
+      { title: 'Honky-Tonk Guitar', desc: 'Live country guitar spilling out of a Lower Broadway bar.', file: 'nashville_honkytonk_guitar.mp3', fact: 'Nashville\'s honky-tonk bars on Lower Broadway have live music playing from early morning all the way until 3 in the morning — musicians perform all day long, every single day!' },
+      { title: 'Broadway Neon Crowd', desc: 'Dense weekend crowd noise and competing bar music on Broadway.', file: 'nashville_broadway_crowd.mp3', fact: 'Nashville is called "Music City" and its neon-lit Lower Broadway strip has so many live music venues side by side that you can hear three different songs at once just standing on the sidewalk!' },
+      { title: 'Grand Ole Opry Bell', desc: 'The stage bell and crowd applause inside the Opry.', file: 'nashville_opry_bell.mp3', fact: 'The Grand Ole Opry has been broadcasting live country music on the radio every single week since 1925 — making it the longest-running live radio program in American history!' },
+      { title: 'Pedal Tavern Sing-Along', desc: 'A group of tourists pedaling and singing on a multi-seat party bike rolling down Nashville\'s streets.', file: 'nashville_pedal_tavern.mp3', fact: 'Nashville is known as "Music City" and even the party bikes come with live singing — music really is everywhere you go!', search: 'group singing outdoor street party laughter' },
+      { title: 'Ryman Auditorium Echo', desc: 'The warm natural reverb of the historic church-turned-concert-hall between performances.', file: 'nashville_ryman_echo.mp3', fact: 'The Ryman Auditorium was built as a church in 1892 and its curved wooden pews create such perfect acoustics that musicians say it makes everything sound beautiful.', search: 'concert hall reverb auditorium indoor acoustic ambient' },
     ],
     'Orlando': [
-      { title: 'Theme Park Fireworks', desc: 'Evening fireworks burst and crowd cheer from a theme park.', file: 'orlando_fireworks.mp3' },
-      { title: 'I-4 Highway Traffic', desc: 'High-speed freeway traffic on one of America\'s busiest interstates.', file: 'orlando_i4_traffic.mp3' },
-      { title: 'Tourist Shuttle Tram', desc: 'Electric tram chime and driver announcement at a resort entrance.', file: 'orlando_tram_shuttle.mp3' },
+      { title: 'Theme Park Fireworks', desc: 'Evening fireworks burst and crowd cheer from a theme park.', file: 'orlando_fireworks.mp3', fact: 'Walt Disney World in Orlando sets off fireworks almost every single night of the year — making Orlando one of the biggest buyers of fireworks in the entire United States!' },
+      { title: 'I-4 Highway Traffic', desc: 'High-speed freeway traffic on one of America\'s busiest interstates.', file: 'orlando_i4_traffic.mp3', fact: 'Interstate 4 through Orlando is one of the most congested highways in the entire country — all those theme park visitors add up to millions of cars every single year!' },
+      { title: 'Tourist Shuttle Tram', desc: 'Electric tram chime and driver announcement at a resort entrance.', file: 'orlando_tram_shuttle.mp3', fact: 'Orlando is the most visited tourist destination in the entire United States — more people come here each year than to New York City or Washington D.C.!' },
+      { title: 'Roller Coaster Launch', desc: 'A launched coaster rocketing from 0 to 70 mph with passengers screaming in delight.', file: 'orlando_coaster_launch.mp3', fact: 'Some of Orlando\'s roller coasters can go from standing still to highway speed in under three seconds — faster than most sports cars!', search: 'roller coaster launch acceleration screaming riders' },
+      { title: 'Orange Grove Morning', desc: 'Wind through fragrant orange tree blossoms and songbirds chirping on a warm Central Florida morning.', file: 'orlando_orange_grove.mp3', fact: 'Florida grows more oranges than almost anywhere else in the United States — the state is so proud of them that the orange blossom is the official state flower!', search: 'bird song morning nature breeze trees rural ambient' },
     ],
     'Tampa': [
-      { title: 'TECO Streetcar Bell', desc: 'The classic bell of the historic electric streetcar on Ybor City line.', file: 'tampa_streetcar_bell.mp3' },
-      { title: 'Bayshore Boulevard Wind', desc: 'Gulf breeze and jogger footfalls along the world\'s longest sidewalk.', file: 'tampa_bayshore_wind.mp3' },
-      { title: 'Ybor Cigar Roller', desc: 'Blade and press sounds from a traditional cigar-rolling workshop.', file: 'tampa_cigar_roller.mp3' },
+      { title: 'TECO Streetcar Bell', desc: 'The classic bell of the historic electric streetcar on Ybor City line.', file: 'tampa_streetcar_bell.mp3', fact: 'Tampa\'s TECO Line streetcar runs on the same tracks that original streetcars used over a hundred years ago — it is a free ride through history right in the city!' },
+      { title: 'Bayshore Boulevard Wind', desc: 'Gulf breeze and jogger footfalls along the world\'s longest sidewalk.', file: 'tampa_bayshore_wind.mp3', fact: 'Bayshore Boulevard has the longest continuous sidewalk in the entire world — it runs along Tampa Bay for nearly 4.5 miles, with a gorgeous water view the whole way!' },
+      { title: 'Ybor Cigar Roller', desc: 'Blade and press sounds from a traditional cigar-rolling workshop.', file: 'tampa_cigar_roller.mp3', fact: 'Ybor City was once the "Cigar Capital of the World" — in the early 1900s, Tampa\'s cigar factories were hand-rolling over 300 million cigars a year!' },
+      { title: 'Tampa Bay Pelicans', desc: 'Brown pelicans squawking and diving from fishing piers on the glittering bay.', file: 'tampa_pelican_pier.mp3', fact: 'Brown pelicans dive headfirst into the water from up to 60 feet in the air to catch fish — and they do it perfectly every time without getting hurt!', search: 'pelican birds squawking pier waterfront coastal' },
+      { title: 'Busch Gardens Drum Show', desc: 'West African-style percussion and crowd energy at an open-air theme park stage.', file: 'tampa_busch_gardens_drum.mp3', fact: 'Busch Gardens Tampa has live animals, roller coasters, and live drum performances all in one park, making it one of the most unique theme parks in the world!', search: 'african drumming percussion live show outdoor crowd' },
     ],
     'Richmond': [
-      { title: 'Canal Walk Waterfall', desc: 'Rushing water and birds at the James River Canal Walk.', file: 'richmond_canal_walk.mp3' },
-      { title: 'Carytown Market Buzz', desc: 'Saturday morning market chatter in the boutique shopping strip.', file: 'richmond_carytown_market.mp3' },
-      { title: 'Main Street Train Depot', desc: 'Amtrak departure whistle and lobby echo at the historic station.', file: 'richmond_train_depot.mp3' },
+      { title: 'Canal Walk Waterfall', desc: 'Rushing water and birds at the James River Canal Walk.', file: 'richmond_canal_walk.mp3', fact: 'Richmond\'s Canal Walk follows the path of a 200-year-old canal that once transported goods by boat right through the heart of the city — you can still see the original stone walls!' },
+      { title: 'Carytown Market Buzz', desc: 'Saturday morning market chatter in the boutique shopping strip.', file: 'richmond_carytown_market.mp3', fact: 'Carytown in Richmond is sometimes called "The Mile of Style" — a one-mile stretch packed with unique small shops, restaurants, and boutiques that you won\'t find anywhere else!' },
+      { title: 'Main Street Train Depot', desc: 'Amtrak departure whistle and lobby echo at the historic station.', file: 'richmond_train_depot.mp3', fact: 'Richmond\'s Main Street Station is a stunning 1901 building with a gorgeous clock tower — after years of being unused, it was lovingly restored and trains run through it again today!' },
+      { title: 'James River Rapid', desc: 'Class IV whitewater churning through boulders in the middle of the city\'s urban rapids park.', file: 'richmond_james_river.mp3', fact: 'Richmond is one of the only cities in the US where you can go whitewater rafting right in the middle of downtown — the James River rapids run right through the city!', search: 'whitewater rapids river rushing rocks outdoor' },
+      { title: 'Shockoe Bottom Nightlife', desc: 'Competing bass lines and crowd murmur spilling from bars in the historic warehouse district.', file: 'richmond_shockoe_bottom.mp3', fact: 'Shockoe Bottom is one of the oldest parts of Richmond, where 200-year-old brick warehouses have been turned into restaurants, bars, and music venues.', search: 'nightlife bar district crowd bass music street noise' },
     ],
     'Raleigh': [
-      { title: 'NC State Bell Tower', desc: 'Memorial Bell Tower carillon at the top of the hour.', file: 'raleigh_ncstate_bell.mp3' },
-      { title: 'Acorn Drop Crowd', desc: 'New Year\'s Eve crowd countdown in downtown Moore Square.', file: 'raleigh_acorn_crowd.mp3' },
-      { title: 'Fayetteville St. Traffic', desc: 'Downtown pedestrian and vehicle flow on the main corridor.', file: 'raleigh_fayetteville_st.mp3' },
+      { title: 'NC State Bell Tower', desc: 'Memorial Bell Tower carillon at the top of the hour.', file: 'raleigh_ncstate_bell.mp3', fact: 'NC State\'s Memorial Bell Tower was built in 1921 to honor students who served in World War I — its bells ring out across campus every day as a reminder of their sacrifice!' },
+      { title: 'Acorn Drop Crowd', desc: 'New Year\'s Eve crowd countdown in downtown Moore Square.', file: 'raleigh_acorn_crowd.mp3', fact: 'Instead of a ball like New York City, Raleigh rings in the New Year by dropping a giant illuminated acorn — because North Carolina is known as the "Tar Heel State" with lots of oak trees!' },
+      { title: 'Fayetteville St. Traffic', desc: 'Downtown pedestrian and vehicle flow on the main corridor.', file: 'raleigh_fayetteville_st.mp3', fact: 'Fayetteville Street is the main street of downtown Raleigh and runs straight from the State Capitol building — it has been the heart of the city since Raleigh was founded in 1792!' },
+      { title: 'NC Museum of Natural Sciences', desc: 'Excited kids and echoing narration under the massive whale skeleton in the grand atrium.', file: 'raleigh_natural_sciences.mp3', fact: 'The NC Museum of Natural Sciences is the largest natural history museum in the southeastern US and is completely free to visit!', search: 'natural history museum children atrium echoing voices' },
+      { title: 'Research Triangle Lab', desc: 'Centrifuge hum, keyboard clicks, and lab ventilation in a biotech research facility.', file: 'raleigh_research_triangle.mp3', fact: 'Raleigh is part of the "Research Triangle," home to so many universities and tech companies that it is one of the fastest-growing science hubs in the US!', search: 'laboratory equipment hum ventilation research ambient' },
     ],
     'New Orleans': [
-      { title: 'Bourbon Street Jazz', desc: 'A trumpet lead floating out of an open French Quarter doorway.', file: 'neworleans_bourbon_jazz.mp3' },
-      { title: 'St. Charles Streetcar', desc: 'The clang and hum of the oldest continuously operating streetcar.', file: 'neworleans_streetcar.mp3' },
-      { title: 'Second Line Drum', desc: 'Snare and bass drum of a second-line parade rolling through Tremé.', file: 'neworleans_secondline_drum.mp3' },
+      { title: 'Bourbon Street Jazz', desc: 'A trumpet lead floating out of an open French Quarter doorway.', file: 'neworleans_bourbon_jazz.mp3', fact: 'New Orleans is considered the birthplace of jazz music — a style invented right here over 100 years ago that went on to influence almost every type of popular music we hear today!' },
+      { title: 'St. Charles Streetcar', desc: 'The clang and hum of the oldest continuously operating streetcar.', file: 'neworleans_streetcar.mp3', fact: 'The St. Charles streetcar line has been running since 1835 — it is the oldest continuously operating streetcar line in the entire world, older than most countries!' },
+      { title: 'Second Line Drum', desc: 'Snare and bass drum of a second-line parade rolling through Tremé.', file: 'neworleans_secondline_drum.mp3', fact: 'A second line parade is a New Orleans tradition where a brass band leads people dancing through the streets — anyone can join the parade and become part of the celebration!' },
+      { title: 'Steamboat Calliope', desc: 'The steam-powered calliope organ aboard the Natchez riverboat whistling across the Mississippi.', file: 'neworleans_steamboat_calliope.mp3', fact: 'A calliope is a musical instrument powered by steam — the Natchez steamboat plays one as it cruises the Mississippi River, and you can hear it from blocks away!', search: 'steam calliope organ riverboat whistle loud' },
+      { title: 'Jackson Square Artists', desc: 'Tarot readers, portrait artists, and street musicians creating a living marketplace in front of the cathedral.', file: 'neworleans_jackson_square.mp3', fact: 'Jackson Square has been a public gathering place since the 1700s and is still filled every day with artists, musicians, and fortune tellers just like it was hundreds of years ago!', search: 'street performers buskers outdoor plaza crowd chatter' },
     ],
     'Memphis': [
-      { title: 'Beale Street Blues', desc: 'Live blues guitar and harmonica from the historic strip.', file: 'memphis_beale_blues.mp3' },
-      { title: 'Mississippi Barge Horn', desc: 'Low foghorn of a barge navigating the Mississippi bend.', file: 'memphis_mississippi_barge.mp3' },
-      { title: 'Rendezvous BBQ Kitchen', desc: 'Grill sizzle, clatter, and smoky ambience from a legendary pit.', file: 'memphis_bbq_kitchen.mp3' },
+      { title: 'Beale Street Blues', desc: 'Live blues guitar and harmonica from the historic strip.', file: 'memphis_beale_blues.mp3', fact: 'Beale Street in Memphis is where the blues music style was born — musicians like B.B. King got their start here, and live music still fills the street every single night!' },
+      { title: 'Mississippi Barge Horn', desc: 'Low foghorn of a barge navigating the Mississippi bend.', file: 'memphis_mississippi_barge.mp3', fact: 'The Mississippi River at Memphis is so wide and powerful that it carries huge barges loaded with grain, coal, and goods all the way from Minnesota down to the Gulf of Mexico!' },
+      { title: 'Rendezvous BBQ Kitchen', desc: 'Grill sizzle, clatter, and smoky ambience from a legendary pit.', file: 'memphis_bbq_kitchen.mp3', fact: 'The Rendezvous has been serving dry-rub ribs in the same downtown alley since 1948 — Memphis dry-rub BBQ is so special that fans fly in from all over the world just to taste it!' },
+      { title: 'Sun Studio Recording', desc: 'Reel-to-reel tape hiss and a single guitar test note inside the tiny studio that launched rock and roll.', file: 'memphis_sun_studio.mp3', fact: 'Sun Studio is where Elvis Presley, Johnny Cash, and Jerry Lee Lewis all recorded their very first songs — it is sometimes called "the birthplace of rock and roll"!', search: 'recording studio vintage tape hiss guitar quiet room' },
+      { title: 'Mud Island River Sound', desc: 'Muddy brown current, distant barge horn, and cicadas on the broad Mississippi riverbank.', file: 'memphis_mud_island.mp3', fact: 'Mud Island in Memphis is actually a peninsula shaped like a guitar — from the air it looks like the most famous music instrument in the world!', search: 'river current ambient barge horn cicadas summer' },
     ],
     'Chicago': [
-      { title: 'The L Curve Squeal', desc: 'Steel wheels grinding around the famous Loop elevated curve.', file: 'chicago_l_curve.mp3' },
-      { title: 'Lake Michigan Wind', desc: 'Gusty wind whipping off the lake along the Magnificent Mile.', file: 'chicago_lakefront_wind.mp3' },
-      { title: 'Navy Pier Crowd', desc: 'Ferris wheel motor, crowd laughter, and distant fireworks.', file: 'chicago_navy_pier.mp3' },
+      { title: 'The L Curve Squeal', desc: 'Steel wheels grinding around the famous Loop elevated curve.', file: 'chicago_l_curve.mp3', fact: 'Chicago\'s famous "L" train makes that loud squealing sound because the train cars are so long that their steel wheels have to grind sideways around the tight Loop curves!' },
+      { title: 'Lake Michigan Wind', desc: 'Gusty wind whipping off the lake along the Magnificent Mile.', file: 'chicago_lakefront_wind.mp3', fact: 'Lake Michigan is so enormous it creates its own weather — the famous cold winds off the lake are why Chicago earned the nickname "The Windy City"!' },
+      { title: 'Navy Pier Crowd', desc: 'Ferris wheel motor, crowd laughter, and distant fireworks.', file: 'chicago_navy_pier.mp3', fact: 'Navy Pier stretches almost a mile out into Lake Michigan — it was originally built in 1916 for ships and cargo, but is now one of the most visited places in all of America!' },
+      { title: 'Chicago Deep-Dish Kitchen', desc: 'Bubbling tomato sauce and sizzling cheese on a thick cast-iron pizza fresh from the oven.', file: 'chicago_deepdish_kitchen.mp3', fact: 'Chicago deep-dish pizza is so thick that it is more like a pie than a regular pizza — it can take 45 minutes just to bake one!', search: 'restaurant kitchen pizza oven sizzle bubbling sauce' },
+      { title: 'Millennium Park Beanfield', desc: 'Wind chimes and crowd murmur echoing off the mirrored Cloud Gate sculpture in the park.', file: 'chicago_cloud_gate.mp3', fact: 'The giant silver bean-shaped sculpture in Millennium Park is officially called "Cloud Gate" but everyone in Chicago just calls it "The Bean" — you can see yourself reflected in it from every angle!', search: 'outdoor park crowd ambient wind reflection art space' },
     ],
     'Detroit': [
-      { title: 'Auto Plant Press', desc: 'Rhythmic stamping press on the production line at a Ford plant.', file: 'detroit_auto_press.mp3' },
-      { title: 'Motown Studio Echo', desc: 'Reverb-drenched vocal takes recorded at Hitsville U.S.A.', file: 'detroit_motown_studio.mp3' },
-      { title: 'Woodward Traffic', desc: 'Classic muscle-car engine rumble during the Woodward Dream Cruise.', file: 'detroit_woodward_traffic.mp3' },
+      { title: 'Auto Plant Press', desc: 'Rhythmic stamping press on the production line at a Ford plant.', file: 'detroit_auto_press.mp3', fact: 'Detroit is called "Motor City" because it is where the modern automobile was born — Henry Ford built his first moving assembly line here in 1913, forever changing how things are made!' },
+      { title: 'Motown Studio Echo', desc: 'Reverb-drenched vocal takes recorded at Hitsville U.S.A.', file: 'detroit_motown_studio.mp3', fact: 'Hitsville U.S.A. in Detroit is where Stevie Wonder, Diana Ross, and The Jackson 5 all recorded their biggest hits — the little house with the big sound changed popular music forever!' },
+      { title: 'Woodward Traffic', desc: 'Classic muscle-car engine rumble during the Woodward Dream Cruise.', file: 'detroit_woodward_traffic.mp3', fact: 'The Woodward Dream Cruise is the world\'s largest classic car event — nearly 40,000 vintage cars and over a million people show up every August to cruise down this famous Detroit street!' },
+      { title: 'Electronic Music Loft', desc: 'Deep synthesizer pulses and drum-machine patterns echoing from a basement techno venue.', file: 'detroit_techno_loft.mp3', fact: 'Electronic techno music was invented in Detroit in the 1980s by a small group of friends with synthesizers — now it is played at dance clubs all over the world!', search: 'techno electronic music synthesizer drum machine bass' },
+      { title: 'Ambassador Bridge Traffic', desc: 'Heavy trucks and commuters crossing the busy international bridge between the US and Canada.', file: 'detroit_ambassador_bridge.mp3', fact: 'The Ambassador Bridge between Detroit and Windsor, Canada is the busiest international border crossing in North America — about one-quarter of all US-Canada trade goes right over it!', search: 'bridge traffic trucks highway rumble crossing' },
     ],
     'Minneapolis': [
-      { title: 'Stone Arch Bridge', desc: 'River rush and train-bridge ambience near Saint Anthony Falls.', file: 'minneapolis_stone_arch.mp3' },
-      { title: 'Skyway Morning Crowd', desc: 'Footsteps and chatter flowing through the enclosed skyway network.', file: 'minneapolis_skyway.mp3' },
-      { title: 'Lake Calhoun Geese', desc: 'Canada geese calls echoing across Bde Maka Ska on a still morning.', file: 'minneapolis_lake_geese.mp3' },
+      { title: 'Stone Arch Bridge', desc: 'River rush and train-bridge ambience near Saint Anthony Falls.', file: 'minneapolis_stone_arch.mp3', fact: 'The Stone Arch Bridge was built in 1883 for trains and is made entirely of granite and limestone — it is the only arch bridge on the entire Mississippi River!' },
+      { title: 'Skyway Morning Crowd', desc: 'Footsteps and chatter flowing through the enclosed skyway network.', file: 'minneapolis_skyway.mp3', fact: 'Minneapolis has the longest enclosed skyway system in the world — over 8 miles of glass-enclosed bridges connecting 80 blocks so people can walk all winter without ever going outside!' },
+      { title: 'Lake Calhoun Geese', desc: 'Canada geese calls echoing across Bde Maka Ska on a still morning.', file: 'minneapolis_lake_geese.mp3', fact: 'The lake known as Bde Maka Ska is a Dakota Sioux name meaning "White Earth Lake" — Minneapolis has restored this original name to honor the people who lived here long before the city was built!' },
+      { title: 'First Avenue Concert Hall', desc: 'Crowd roar and thumping bass inside the legendary music venue where Prince performed.', file: 'minneapolis_first_avenue.mp3', fact: 'First Avenue in Minneapolis is one of America\'s most famous concert venues — the musician Prince filmed his movie "Purple Rain" there!', search: 'concert venue crowd roar bass music nightclub' },
+      { title: 'Winter Ice Skating', desc: 'Blade scrapes and laughter on the outdoor Loring Park ice rink on a clear winter night.', file: 'minneapolis_ice_skating.mp3', fact: 'Minneapolis gets so cold in winter that outdoor ice rinks form naturally — and the city even lights them up at night so people can skate under the stars!', search: 'ice skating rink outdoor blade scraping winter laughter' },
     ],
     'Cleveland': [
       { title: 'Lake Erie Wave', desc: 'Heavy waves rolling in on a breezy day at Edgewater Beach.', file: 'cleveland_lake_erie.mp3' },
       { title: 'Rapid Transit Chime', desc: 'RTA Red Line door chime and acceleration leaving Tower City.', file: 'cleveland_rapid_transit.mp3' },
       { title: 'Guardians Stadium', desc: 'Progressive Field crowd roar and organ between innings.', file: 'cleveland_guardians_stadium.mp3' },
+      { title: 'Rock Hall Listening Booth', desc: 'Headphone static and a classic rock track playing in a museum listening station surrounded by memorabilia.', file: 'cleveland_rock_hall.mp3', fact: 'The Rock and Roll Hall of Fame is in Cleveland because a famous DJ named Alan Freed first used the term "rock and roll" on a Cleveland radio station back in the 1950s!', search: 'museum listening station headphones classic rock ambient' },
+      { title: 'Cuyahoga River Trail', desc: 'Kayak paddle strokes, birdsong, and the creak of wooden trail bridges along the river valley.', file: 'cleveland_cuyahoga_trail.mp3', fact: 'The Cuyahoga River famously caught fire in 1969 because it was so polluted — that shocking event helped inspire the creation of the US Environmental Protection Agency!', search: 'river trail kayak birdsong nature paddle outdoor' },
     ],
     'Indianapolis': [
       { title: 'Indy 500 Engine Pass', desc: 'An IndyCar screaming past at full speed on the main straight.', file: 'indianapolis_indy500_engine.mp3' },
       { title: 'Canal Walk Splash', desc: 'Paddle boats and fountain water along the Central Canal.', file: 'indianapolis_canal_walk.mp3' },
       { title: 'Union Station Lobby', desc: 'Footsteps and echoing announcements in the grand hall.', file: 'indianapolis_union_station.mp3' },
+      { title: 'Monument Circle Bell', desc: 'The Soldiers and Sailors Monument chiming the hour in the heart of downtown.', file: 'indianapolis_monument_circle.mp3', fact: 'The Soldiers and Sailors Monument in the center of Indianapolis is so tall that you can see it from almost anywhere downtown — it is the very heart of the city!', search: 'monument bell chiming city center hour clock tower' },
+      { title: 'Children\'s Museum Dino Hall', desc: 'Excited kids and echoing footsteps beneath a towering T. rex skeleton in one of the world\'s biggest children\'s museums.', file: 'indianapolis_childrens_museum.mp3', fact: 'The Children\'s Museum of Indianapolis is the largest children\'s museum in the entire world — it even has real dinosaur skeletons inside!', search: 'children museum dino hall echoing kids voices excited' },
     ],
     'Columbus': [
       { title: 'Ohio Stadium Roar', desc: '"The Horseshoe" erupting on a Buckeyes touchdown.', file: 'columbus_ohio_stadium.mp3' },
       { title: 'Short North Weekend', desc: 'Gallery Hop night street noise on High Street.', file: 'columbus_short_north.mp3' },
       { title: 'Scioto River Trail', desc: 'Cyclist bells, water, and wind along the Scioto Greenway.', file: 'columbus_scioto_trail.mp3' },
+      { title: 'North Market Chatter', desc: 'Vendor calls, shopping bags rustling, and a dozen overlapping conversations at the historic public market.', file: 'columbus_north_market.mp3', fact: 'North Market in Columbus has been a gathering place for local farmers and food makers since 1876 — over 140 years of fresh food in the heart of the city!', search: 'indoor market vendor chatter shoppers food hall' },
+      { title: 'Nationwide Arena Goal Horn', desc: 'Blue Jackets goal horn blast and roaring crowd in the NHL arena.', file: 'columbus_blue_jackets.mp3', fact: 'When the Columbus Blue Jackets score a goal, they fire a huge Civil War-era cannon inside the arena — it is one of the loudest and most unique goal celebrations in all of hockey!', search: 'hockey arena goal horn crowd roar indoor' },
     ],
     'Milwaukee': [
       { title: 'Lake Michigan Ferry', desc: 'Car-ferry horn and engine throb departing for Michigan.', file: 'milwaukee_lake_ferry.mp3' },
       { title: 'German Fest Crowd', desc: 'Oompah band and beer-garden crowd at Summerfest grounds.', file: 'milwaukee_germanfest.mp3' },
       { title: 'American Family Field', desc: 'Brewers game crowd and sausage-race PA announcement.', file: 'milwaukee_brewers_stadium.mp3' },
+      { title: 'Third Ward Riverwalk', desc: 'Water taxi engine, seagulls, and café terrace chatter along the Milwaukee River.', file: 'milwaukee_third_ward.mp3', fact: 'Milwaukee\'s Third Ward used to be an industrial warehouse district, but it has been turned into one of the coolest neighborhoods in the Midwest with art galleries and great food!', search: 'river walk water taxi seagulls cafe outdoor chatter' },
+      { title: 'Harley Showroom Rev', desc: 'A Harley-Davidson V-twin engine rumbling to life on the showroom floor of the motorcycle museum.', file: 'milwaukee_harley_rev.mp3', fact: 'Harley-Davidson motorcycles were invented in Milwaukee in 1903 by two friends in a tiny wooden shed — now they are ridden by people in every country on Earth!', search: 'motorcycle engine rumble v-twin indoor showroom' },
     ],
     'St. Louis': [
       { title: 'Gateway Arch Tram', desc: 'The cramped capsule tram ascending inside the Arch leg.', file: 'stlouis_arch_tram.mp3' },
       { title: 'Mississippi Towboat', desc: 'A diesel towboat horn and paddle-wheel churning near the levee.', file: 'stlouis_mississippi_towboat.mp3' },
       { title: 'Soulard Blues Bar', desc: 'Harmonica and shuffle groove from a Soulard neighborhood bar.', file: 'stlouis_soulard_blues.mp3' },
+      { title: 'Forest Park Paddleboat', desc: 'Paddle wheel splashing and ducks calling on the lagoon inside one of America\'s largest urban parks.', file: 'stlouis_forest_park.mp3', fact: 'Forest Park in St. Louis is bigger than New York\'s Central Park and has free museums inside it — the 1904 World\'s Fair was held there over 120 years ago!', search: 'paddleboat lake lagoon ducks splashing park outdoor' },
+      { title: 'Cardinals Stadium Organ', desc: 'The classic ballpark organ and crowd chant at Busch Stadium on a summer evening.', file: 'stlouis_cardinals_organ.mp3', fact: 'The St. Louis Cardinals have won more World Series championships than any National League team in baseball history — their fans are among the most passionate in the sport!', search: 'baseball stadium organ crowd chant summer game' },
     ],
     'Kansas City': [
       { title: 'Jazz District Evening', desc: 'A walking bass line and brushed snare from an 18th & Vine club.', file: 'kansascity_jazz_district.mp3' },
       { title: 'BBQ Pit Sizzle', desc: 'Brisket sizzling over hickory wood at a legendary BBQ joint.', file: 'kansascity_bbq_pit.mp3' },
       { title: 'Union Station Train', desc: 'Amtrak Southwest Chief departure from the restored grand station.', file: 'kansascity_union_station.mp3' },
+      { title: 'City Market Morning', desc: 'Produce vendor calls and shopping cart wheels on the brick plaza of the oldest continually operating farmers market west of the Mississippi.', file: 'kansascity_city_market.mp3', fact: 'Kansas City\'s City Market has been open since 1857 — before the US Civil War — making it one of the oldest outdoor markets in the entire country!', search: 'farmers market outdoor produce vendor morning crowd' },
+      { title: 'Royals Game Sunset', desc: 'Crowd hum and the crack of a bat at Kauffman Stadium during a warm summer evening game.', file: 'kansascity_royals_stadium.mp3', fact: 'Kauffman Stadium in Kansas City is famous for having one of the most beautiful baseball parks in the US, with a giant waterfall display in the outfield!', search: 'baseball stadium crowd bat crack summer evening' },
     ],
     'Cincinnati': [
       { title: 'Ohio River Barge', desc: 'Towboat horn and river traffic beneath the suspension bridge.', file: 'cincinnati_ohio_barge.mp3' },
       { title: 'Great American Ballpark', desc: 'Reds crowd roar and home-run fireworks by the river.', file: 'cincinnati_reds_stadium.mp3' },
       { title: 'Chili Parlor Sizzle', desc: 'Kitchen sounds and counter conversation at a Cincinnati chili spot.', file: 'cincinnati_chili_parlor.mp3' },
+      { title: 'Eden Park Overlook Wind', desc: 'Breeze and birdsong from the hilltop park overlooking the Ohio River Valley.', file: 'cincinnati_eden_park.mp3', fact: 'Eden Park sits on a hill so high that on a clear day you can see across the Ohio River all the way into the state of Kentucky!', search: 'hilltop park wind breeze birdsong overlook outdoor' },
+      { title: 'Cincinnati Pops Rehearsal', desc: 'Orchestra warming up with layered tuning notes before a performance at Music Hall.', file: 'cincinnati_orchestra_tuning.mp3', fact: 'Cincinnati\'s Music Hall is a gorgeous Victorian building from 1878 and has been declared a National Historic Landmark — it is one of the prettiest concert halls in America!', search: 'orchestra rehearsal tuning instruments concert hall' },
     ],
     'Houston': [
       { title: 'NASA Mission Control', desc: 'Radio chatter and telemetry beeps from a Johnson Space Center tour.', file: 'houston_nasa_control.mp3' },
       { title: 'Ship Channel Industry', desc: 'Distant industrial hum and vessel horn from the busy port channel.', file: 'houston_ship_channel.mp3' },
       { title: 'Tex-Mex Market', desc: 'Tortilla press, sizzling comal, and Spanish radio in a taqueria.', file: 'houston_texmex_market.mp3' },
+      { title: 'Buffalo Bayou Paddle', desc: 'Kayak strokes and egret calls drifting through the green bayou waterway in the heart of the city.', file: 'houston_buffalo_bayou.mp3', fact: 'Houston has a massive network of bayous — slow-moving water channels — running right through the city, and you can kayak through many of them!', search: 'bayou kayak paddle egret birds water urban nature' },
+      { title: 'Rodeo Houston Arena', desc: 'Country music concert crowd and the PA roar before a bull-riding event at the largest rodeo on Earth.', file: 'houston_rodeo_arena.mp3', fact: 'The Houston Livestock Show and Rodeo is the biggest rodeo in the world, attracting over 2 million visitors each year — that is more than the entire population of Houston itself could watch at once!', search: 'rodeo arena crowd country music bull riding announcement' },
     ],
     'Dallas': [
       { title: 'DART Light Rail', desc: 'DART train chime and door announcement at a downtown station.', file: 'dallas_dart_train.mp3' },
       { title: 'Deep Ellum Live Music', desc: 'Electric guitar and crowd noise pouring from a Ellum venue.', file: 'dallas_deep_ellum.mp3' },
       { title: 'AT&T Stadium Crowd', desc: 'Cowboys game roar bouncing off the massive retractable roof.', file: 'dallas_cowboys_stadium.mp3' },
+      { title: 'Bishop Arts Café Patio', desc: 'Sunday brunch chatter and acoustic guitar on a sunny café patio in the bohemian arts district.', file: 'dallas_bishop_arts.mp3', fact: 'The Bishop Arts District in Dallas was once a quiet forgotten neighborhood, but local artists and small businesses turned it into one of the most vibrant spots in the whole city!', search: 'cafe patio brunch outdoor chatter acoustic guitar sunny' },
+      { title: 'DFW Airport Sky Train', desc: 'The automated SkyLink train whooshing between terminals and PA gate announcements overhead.', file: 'dallas_dfw_skytrain.mp3', fact: 'Dallas-Fort Worth Airport is so enormous that it has its own zip code and is larger in area than the entire island of Manhattan in New York City!', search: 'airport automated train terminal announcement departure' },
     ],
     'Austin': [
       { title: '6th Street Live Music', desc: 'Overlapping live bands drifting from clubs on a Friday night.', file: 'austin_sixthst_music.mp3' },
       { title: 'Barton Springs Splash', desc: 'Swimmers and spring-fed water sounds at the beloved outdoor pool.', file: 'austin_barton_springs.mp3' },
       { title: 'Longhorn Band March', desc: 'DKR stadium filled with the UT Longhorn marching band.', file: 'austin_longhorn_band.mp3' },
+      { title: 'Congress Bridge Bats', desc: 'The rustling thunder of 1.5 million Mexican free-tailed bats swarming from under the bridge at dusk.', file: 'austin_congress_bats.mp3', fact: 'Every summer evening at sunset, nearly 1.5 million bats fly out from under the Congress Avenue Bridge in Austin — it is the largest urban bat colony in North America!', search: 'bats swarm wings flapping dusk outdoor nature crowd' },
+      { title: 'Rainey Street Food Truck', desc: 'Generator hum, sizzling grill, and laughter from a packed outdoor food truck park.', file: 'austin_rainey_foodtruck.mp3', fact: 'Austin has more food trucks per person than almost any other city in the US — you can find everything from tacos to Thai food served from a colorful truck on the street!', search: 'food truck outdoor generator sizzling crowd laughter evening' },
     ],
     'San Antonio': [
       { title: 'River Walk Mariachi', desc: 'A full mariachi ensemble floating past on a barge.', file: 'sanantonio_riverwalk_mariachi.mp3' },
       { title: 'Alamo Plaza Crowd', desc: 'Tourist footsteps and guide narration near the historic mission.', file: 'sanantonio_alamo_crowd.mp3' },
       { title: 'Fiesta Drum Line', desc: 'Percussion corps marching through downtown during Fiesta week.', file: 'sanantonio_fiesta_drum.mp3' },
+      { title: 'Mission San José Bells', desc: 'Stone church bells ringing from one of Texas\'s oldest Spanish missions.', file: 'sanantonio_mission_bells.mp3', fact: 'San Antonio\'s Spanish missions were built over 300 years ago by Spanish explorers — they are so historically important that they are now a UNESCO World Heritage Site!', search: 'church bells mission stone historic outdoor ringing' },
+      { title: 'Pearl Brewery Farmers Market', desc: 'Sunday market chatter, coffee aromas, and live acoustic music in the renovated historic brewery district.', file: 'sanantonio_pearl_market.mp3', fact: 'The Pearl Brewery in San Antonio was once one of the biggest beer breweries in Texas; now it has been turned into a beautiful neighborhood full of restaurants, markets, and apartments!', search: 'farmers market sunday outdoor crowd acoustic music coffee' },
     ],
     'Fort Worth': [
       { title: 'Stockyards Cattle Drive', desc: 'Longhorn hooves on brick and cowhand calls during the daily drive.', file: 'fortworth_stockyards_cattle.mp3' },
       { title: 'Bass Hall Bell', desc: 'Pre-concert chime and lobby buzz at Bass Performance Hall.', file: 'fortworth_bass_hall.mp3' },
       { title: 'Trinity Trail Wind', desc: 'Breeze, birdsong, and cyclist sounds on the river trail.', file: 'fortworth_trinity_trail.mp3' },
+      { title: 'Western Wear Shop', desc: 'Boot heels on hardwood, belt-buckle clink, and country radio in a classic western outfitter.', file: 'fortworth_western_wear.mp3', fact: 'Fort Worth is still known as "Cowtown" because it was a major stop on the famous cattle trail — and western wear shops still thrive there today!', search: 'western store boot heels wooden floor country radio' },
+      { title: 'Sundance Square Fountain', desc: 'Water jets, evening crowd, and street musician guitar in the lively downtown entertainment district.', file: 'fortworth_sundance_square.mp3', fact: 'Sundance Square in Fort Worth was once a lawless Wild West area; now it is a beloved public square where families come to eat, shop, and enjoy live music!', search: 'public square fountain crowd evening street musician guitar' },
     ],
     'Oklahoma City': [
       { title: 'Bricktown Canal', desc: 'Water taxi engine and evening crowd along the entertainment canal.', file: 'oklahomacity_bricktown_canal.mp3' },
       { title: 'Thunder Arena', desc: 'Loud crowd and bass-heavy PA at Paycom Center on game night.', file: 'oklahomacity_thunder_arena.mp3' },
       { title: 'Prairie Wind', desc: 'Open-plains wind sweeping across the flat Oklahoma landscape.', file: 'oklahomacity_prairie_wind.mp3' },
+      { title: 'Route 66 Diner', desc: 'Jukebox oldies, booth chatter, and the clink of milkshake glasses at a vintage roadside diner.', file: 'oklahomacity_route66_diner.mp3', fact: 'Oklahoma City sits along the famous Route 66, the legendary highway that crosses America from Chicago all the way to Los Angeles — the "Mother Road" of American road trips!', search: 'vintage diner jukebox oldies booth chatter milkshake clink' },
+      { title: 'Scissortail Park Kites', desc: 'Wind rushing through kite strings and children laughing on the expansive new park lawn downtown.', file: 'oklahomacity_scissortail_park.mp3', fact: 'Scissortail Park opened in 2021 and is named after the scissor-tailed flycatcher, Oklahoma\'s state bird — known for its long elegant tail feathers!', search: 'kite flying wind park outdoor children laughing' },
     ],
     'Tulsa': [
       { title: 'Route 66 Roadster', desc: 'Classic car rumble cruising historic Route 66 through Tulsa.', file: 'tulsa_route66_roadster.mp3' },
       { title: 'Arkansas River Wind', desc: 'River breeze and bird calls from the Gathering Place park.', file: 'tulsa_arkansas_river.mp3' },
       { title: 'Cain\'s Ballroom Two-Step', desc: 'Shuffling boots on the spring dance floor of a legendary venue.', file: 'tulsa_cains_ballroom.mp3' },
+      { title: 'Gathering Place Splash Pad', desc: 'Children shrieking with joy through water jets at the massive public riverfront park.', file: 'tulsa_gathering_place.mp3', fact: 'The Gathering Place in Tulsa is one of the largest privately funded public parks in US history — it opened in 2018 and is completely free for everyone to enjoy!', search: 'splash pad children water jets outdoor park laughter' },
+      { title: 'Tulsa Deco District', desc: 'Evening strollers and café conversations amid the ornate Art Deco buildings of downtown.', file: 'tulsa_deco_district.mp3', fact: 'Tulsa has one of the largest collections of Art Deco architecture in the entire United States — many of those gorgeous decorated buildings were built during the 1920s oil boom!', search: 'evening downtown strollers cafe outdoor conversation urban' },
     ],
     'El Paso': [
       { title: 'Border Crossing Booth', desc: 'Car idling, agent greeting, and stamp at the international crossing.', file: 'elpaso_border_crossing.mp3' },
       { title: 'Rio Grande Flow', desc: 'Gentle current and desert bird calls along the river bend.', file: 'elpaso_rio_grande.mp3' },
       { title: 'Downtown Streetcar', desc: 'El Paso Streetcar bell and Spanish-English announcements.', file: 'elpaso_streetcar.mp3' },
+      { title: 'Franklin Mountains Wind', desc: 'Desert wind moaning through the rocky passes of the Franklin Mountains rising above the city.', file: 'elpaso_franklin_mountains.mp3', fact: 'The Franklin Mountains in El Paso are one of the only mountain ranges in the US that run right through the middle of a city — you can hike them from downtown!', search: 'desert wind mountain pass rocky outdoor nature' },
+      { title: 'Sun Bowl Stadium', desc: 'UTEP Miners crowd and marching band echoing inside the stadium carved into the mountain.', file: 'elpaso_sun_bowl.mp3', fact: 'El Paso\'s Sun Bowl stadium was built right into the side of a mountain — meaning the mountains ARE the stadium walls on one side, making it one of the most unique sports venues in the world!', search: 'outdoor stadium crowd marching band mountain echo' },
     ],
     'Arlington': [
       { title: 'Cowboys Crowd Roar', desc: 'AT&T Stadium erupting on a touchdown with the giant screen.', file: 'arlington_cowboys_roar.mp3' },
       { title: 'Six Flags Coaster', desc: 'Roller coaster chain lift and passenger screams at the park.', file: 'arlington_sixflags_coaster.mp3' },
       { title: 'Globe Life Field', desc: 'Rangers game with retractable roof open on a spring evening.', file: 'arlington_rangers_stadium.mp3' },
+      { title: 'International Bowling Campus', desc: 'Rolling balls, pin strikes, and lane chatter from the national headquarters of bowling.', file: 'arlington_bowling_campus.mp3', fact: 'Arlington is home to the International Bowling Campus, the world headquarters of bowling — the sport where a heavy ball knocking down pins has been making satisfying crashes for centuries!', search: 'bowling alley pins strike rolling ball indoor crowd' },
+      { title: 'Levitt Pavilion Concert', desc: 'Outdoor lawn concert cheers and guitar from the free summer music series by the river.', file: 'arlington_levitt_pavilion.mp3', fact: 'The Levitt Pavilion in Arlington puts on over 50 free outdoor concerts every summer — anyone can come, spread out a blanket, and enjoy live music under the Texas sky!', search: 'outdoor lawn concert crowd guitar summer evening free' },
     ],
     'Corpus Christi': [
       { title: 'Gulf Breeze & Palms', desc: 'Warm gulf wind rustling palms along the seawall promenade.', file: 'corpuschristi_gulf_breeze.mp3' },
       { title: 'Seawall Wave Crash', desc: 'Ocean waves breaking rhythmically against the concrete seawall.', file: 'corpuschristi_seawall_waves.mp3' },
       { title: 'Shrimp Boat Horn', desc: 'Gulf shrimping vessel horn departing from the working waterfront.', file: 'corpuschristi_shrimp_boat.mp3' },
+      { title: 'USS Lexington Flight Deck', desc: 'Gulf wind howling across the open flight deck of the decommissioned aircraft carrier turned museum.', file: 'corpuschristi_uss_lexington.mp3', fact: 'The USS Lexington aircraft carrier is now a floating museum in Corpus Christi Bay — you can actually walk around the enormous ship and see the planes that once flew from it!', search: 'aircraft carrier flight deck wind outdoor metal ocean' },
+      { title: 'Padre Island Surf', desc: 'Long rolling waves breaking on the longest undeveloped barrier island in the world.', file: 'corpuschristi_padre_island.mp3', fact: 'Padre Island National Seashore is the longest undeveloped stretch of barrier island on the entire planet — 70 miles of wild beach with no buildings in sight!', search: 'ocean surf waves beach barrier island wind seagulls' },
     ],
     'Los Angeles': [
       { title: 'Freeway Drone', desc: 'Endless freeway traffic hum from the 405 overpass at rush hour.', file: 'losangeles_freeway_drone.mp3' },
       { title: 'Venice Beach Drums', desc: 'Weekend drum circle and skatepark sounds at Venice Beach.', file: 'losangeles_venice_drums.mp3' },
       { title: 'Dodger Stadium Crowd', desc: '"I Love LA" playing and crowd roar during a home-game win.', file: 'losangeles_dodger_stadium.mp3' },
+      { title: 'Hollywood Boulevard Walk', desc: 'Tourists reading star names, street performer music, and taxi horns on the iconic entertainment strip.', file: 'losangeles_hollywood_blvd.mp3', fact: 'The Hollywood Walk of Fame has over 2,700 stars embedded in the sidewalk — each one honors someone famous in movies, music, TV, or radio!', search: 'tourist street performer crowd busy boulevard traffic horns' },
+      { title: 'Santa Monica Pier Waves', desc: 'Pacific Ocean waves, seagulls, and the distant organ of the pier carousel at the end of Route 66.', file: 'losangeles_santamonica_pier.mp3', fact: 'Santa Monica Pier marks the official western end of Route 66 — the famous highway that runs all the way from Chicago. It is where the road meets the Pacific Ocean!', search: 'ocean pier waves seagulls carousel organ coastal' },
     ],
     'San Francisco': [
       { title: 'Cable Car Bell', desc: 'The gripman ringing the bell descending Powell Street.', file: 'sanfrancisco_cablecar_bell.mp3' },
       { title: 'Bay Foghorn', desc: 'Deep resonant foghorn echoing off the Bay on a grey morning.', file: 'sanfrancisco_bay_foghorn.mp3' },
       { title: 'BART Train Station', desc: 'BART whoosh, door chime, and platform announcement underground.', file: 'sanfrancisco_bart_train.mp3' },
+      { title: 'Chinatown Market', desc: 'Produce vendors, Cantonese chatter, and the clatter of live seafood tanks in the largest Chinatown outside Asia.', file: 'sanfrancisco_chinatown_market.mp3', fact: 'San Francisco\'s Chinatown is the oldest in North America, founded in 1848, and is so densely packed that it is one of the most densely populated urban areas in the US!', search: 'chinatown market vendor chatter seafood tank produce busy' },
+      { title: 'Golden Gate Wind', desc: 'Howling Pacific wind and the low moan of suspension cables on a foggy afternoon crossing.', file: 'sanfrancisco_golden_gate_wind.mp3', fact: 'The Golden Gate Bridge actually hums in the wind! Engineers added special railing slots in 2020 to reduce the hum, but on a windy day you can still hear the bridge sing.', search: 'suspension bridge wind howling cables fog outdoor' },
     ],
     'Seattle': [
       { title: 'Pike Place Fish Throw', desc: 'Market staff calling and crowd cheering a flying fish toss.', file: 'seattle_pikplace_fish.mp3' },
       { title: 'Washington State Ferry', desc: 'Ferry horn, seagulls, and engine thrum on the Puget Sound crossing.', file: 'seattle_wsf_ferry.mp3' },
       { title: 'Rain on Pike Street', desc: 'Pacific Northwest drizzle and umbrella footsteps on wet pavement.', file: 'seattle_rain_pike_st.mp3' },
+      { title: 'Space Needle Observation Deck', desc: 'Wind rushing around the circular deck and excited visitors pointing at the mountain panorama 605 feet up.', file: 'seattle_space_needle.mp3', fact: 'The Space Needle was built for the 1962 World\'s Fair in just 13 months — and it was designed to withstand winds of 200 mph and a 9.1 magnitude earthquake!', search: 'observation tower wind outdoor crowd height panoramic view' },
+      { title: 'Puget Sound Orca Calls', desc: 'Hydrophone recordings of orca whale calls and echolocation clicks beneath the surface of the Sound.', file: 'seattle_orca_calls.mp3', fact: 'Orca whales swim in Puget Sound near Seattle and each family pod has its own unique set of calls — almost like their own language — that only their family uses!', search: 'orca whale calls underwater hydrophone echolocation ocean' },
     ],
     'Portland': [
       { title: 'MAX Light Rail', desc: 'TriMet MAX arrival bell and doors opening at Pioneer Courthouse.', file: 'portland_max_lightrail.mp3' },
       { title: 'Saturday Market', desc: 'Craft vendor crowd and live folk music under the Burnside Bridge.', file: 'portland_saturday_market.mp3' },
       { title: 'Columbia River Rain', desc: 'Heavy Pacific rain and river sounds from the Tom McCall Waterfront.', file: 'portland_river_rain.mp3' },
+      { title: 'Powell\'s Books Pages', desc: 'Rustling pages, whispered conversations, and footsteps on creaky floors in the world\'s largest independent bookstore.', file: 'portland_powells_books.mp3', fact: 'Powell\'s City of Books in Portland is so big it occupies an entire city block and has over one million books — you could get lost in there for hours!', search: 'bookstore indoor quiet pages turning whispers footsteps' },
+      { title: 'Multnomah Falls', desc: 'The thunderous crash and mist-spray of a 620-foot waterfall in the Columbia River Gorge.', file: 'portland_multnomah_falls.mp3', fact: 'Multnomah Falls is the tallest waterfall in Oregon at 620 feet tall — about as tall as a 60-story skyscraper — and it runs all year round!', search: 'waterfall rushing crash mist nature outdoor tall' },
     ],
     'Denver': [
       { title: 'Union Station Crowd', desc: 'Lively atrium chatter and train announcement at the renovated hub.', file: 'denver_union_station.mp3' },
       { title: 'Mile-High Wind Gust', desc: 'Strong Front Range wind kicking up across the 16th St. Mall.', file: 'denver_milehigh_wind.mp3' },
       { title: 'Rockies Stadium', desc: 'Coors Field crowd and mile-high altitude PA echo on game night.', file: 'denver_rockies_stadium.mp3' },
+      { title: 'Red Rocks Amphitheatre Echo', desc: 'Music and crowd cheers bouncing between towering sandstone monoliths under the open Colorado sky.', file: 'denver_red_rocks.mp3', fact: 'Red Rocks Amphitheatre is carved between two giant natural rock formations — the rocks are so perfectly shaped that even without microphones the sound would carry to every seat!', search: 'outdoor amphitheatre rock echo concert crowd natural reverb' },
+      { title: 'Rocky Mountain Ski Gondola', desc: 'Cable hum, gondola creak, and the crunch of skis on fresh packed powder.', file: 'denver_ski_gondola.mp3', fact: 'Colorado has so many famous ski mountains that you can drive from downtown Denver and be on the slopes in about an hour — some of the best skiing in the entire world!', search: 'ski gondola cable hum creaking mountain snow outdoor' },
     ],
     'Las Vegas': [
       { title: 'Casino Slot Machines', desc: 'Overlapping slot chimes, coins, and ambient casino floor roar.', file: 'lasvegas_casino_slots.mp3' },
       { title: 'Bellagio Fountain Show', desc: 'Water cannons, crowd gasps, and orchestral music at the fountains.', file: 'lasvegas_bellagio_fountain.mp3' },
       { title: 'Strip Crowd at Night', desc: 'Packed sidewalk noise, distant music, and taxi horns after midnight.', file: 'lasvegas_strip_crowd.mp3' },
+      { title: 'Fremont Street Light Show', desc: 'Swelling electronic music and crowd cheers under the 1,500-foot LED canopy downtown.', file: 'lasvegas_fremont_lightshow.mp3', fact: 'The Fremont Street Experience canopy is covered in 2.1 million LED lights and plays music and light shows every night — it is like a giant TV screen stretched over an entire street!', search: 'led light show outdoor crowd electronic music night' },
+      { title: 'Hoover Dam Turbines', desc: 'The deep resonant hum of massive power turbines inside the dam\'s generator room below Lake Mead.', file: 'lasvegas_hoover_dam.mp3', fact: 'Hoover Dam was built in the 1930s using enough concrete to build a two-lane highway from New York City to San Francisco — and it still powers millions of homes today!', search: 'power turbine generator hum industrial indoor dam' },
     ],
     'Phoenix': [
       { title: 'Desert Cicadas', desc: 'Deafening summer cicada chorus in a Sonoran Desert suburb.', file: 'phoenix_desert_cicadas.mp3' },
       { title: 'Valley Metro Rail', desc: 'Light rail arriving at a shaded downtown station platform.', file: 'phoenix_valley_metro.mp3' },
       { title: 'Suns Arena Energy', desc: 'Footprint Center crowd and pump-up PA during a playoff game.', file: 'phoenix_suns_arena.mp3' },
+      { title: 'Monsoon Thunderstorm', desc: 'Sudden summer monsoon rain hammering the desert pavement and thunder echoing off mountain ridges.', file: 'phoenix_monsoon_storm.mp3', fact: 'Every summer, Arizona gets a "monsoon season" where giant thunderstorms appear out of nowhere and drench the hot desert — sometimes with walls of sand called "haboobs" rolling in first!', search: 'thunderstorm rain heavy thunder desert summer monsoon' },
+      { title: 'Desert Sunset Trail', desc: 'Footsteps on packed dirt, cactus wren calls, and the wind rustling dry desert brush at golden hour.', file: 'phoenix_desert_trail.mp3', fact: 'Phoenix has over 200 miles of hiking trails right within the city limits — so you can go from hiking a mountain to eating breakfast downtown in less than 30 minutes!', search: 'desert trail footsteps birds wind dry brush outdoor hiking' },
     ],
     'San Diego': [
       { title: 'Coronado Ferry', desc: 'Ferry engine and sea breeze crossing San Diego Bay to Coronado.', file: 'sandiego_coronado_ferry.mp3' },
       { title: 'Gaslamp Quarter Night', desc: 'Weekend crowds, music, and restaurant noise in the historic district.', file: 'sandiego_gaslamp_night.mp3' },
       { title: 'Zoo Animal Calls', desc: 'Overlapping exotic bird calls and primate sounds from the world-famous zoo.', file: 'sandiego_zoo_animals.mp3' },
+      { title: 'Balboa Park Organ', desc: 'The outdoor organ pavilion filling the park with classical music on a Sunday afternoon.', file: 'sandiego_balboa_organ.mp3', fact: 'Balboa Park has one of the world\'s largest outdoor organs and hosts free concerts every Sunday — it has been playing music in the open air since 1915!', search: 'outdoor organ pipe classical music park Sunday concert' },
+      { title: 'Pacific Beach Surf Break', desc: 'Longboards slapping the break, surfers whooping, and waves rolling onto the sandy shore.', file: 'sandiego_surf_break.mp3', fact: 'San Diego has some of the most consistent surf conditions in the US — the waves here helped inspire the California surf culture that spread all over the world in the 1960s!', search: 'surfing ocean waves beach longboard outdoor surfer whooping' },
     ],
     'Sacramento': [
       { title: 'Capitol Mall Carillon', desc: 'State Capitol bells drifting across the tree-lined mall.', file: 'sacramento_capitol_bells.mp3' },
       { title: 'Sacramento River Kayak', desc: 'Paddle drip, water current, and river bird sounds.', file: 'sacramento_river_kayak.mp3' },
       { title: 'Midtown Farmers Market', desc: 'Saturday produce market bustle with live acoustic music.', file: 'sacramento_farmers_market.mp3' },
+      { title: 'Old Sacramento Stagecoach', desc: 'Horse hooves on wooden planks and a driver\'s call echoing through the historic gold rush district.', file: 'sacramento_old_sac_stagecoach.mp3', fact: 'Sacramento was the western end of the very first transcontinental railroad — trains arriving here in the 1860s connected California to the rest of the United States for the first time!', search: 'horse hooves wooden planks stagecoach historic outdoor' },
+      { title: 'Tower Bridge Evening', desc: 'Distant traffic hum and river breeze from the golden lift bridge over the Sacramento River at dusk.', file: 'sacramento_tower_bridge.mp3', fact: 'Sacramento\'s Tower Bridge is painted gold to match the state\'s "Golden State" nickname and looks especially beautiful when the setting sun makes it glow!', search: 'bridge evening traffic hum river breeze outdoor dusk' },
     ],
     'Salt Lake City': [
       { title: 'Temple Square Bells', desc: 'LDS Conference Center carillon pealing over the city center.', file: 'saltlakecity_temple_bells.mp3' },
       { title: 'TRAX Train Departure', desc: 'UTA TRAX door chime and acceleration leaving downtown station.', file: 'saltlakecity_trax_train.mp3' },
       { title: 'Great Salt Lake Wind', desc: 'Flat, mineral-scented wind sweeping across the ancient lakebed.', file: 'saltlakecity_saltlake_wind.mp3' },
+      { title: 'Ski Resort Chairlift', desc: 'Cable hum and the swish of powder skis at a Wasatch Mountain resort above the city.', file: 'saltlakecity_ski_chairlift.mp3', fact: 'Salt Lake City hosted the 2002 Winter Olympics and the surrounding mountains get so much light, dry snowflakes that Utah\'s snow is nicknamed "The Greatest Snow on Earth"!', search: 'ski chairlift cable hum mountain snow powder outdoor' },
+      { title: 'Pioneer Park Saturday Market', desc: 'Fresh produce calls, folk guitar, and multilingual chatter at the downtown outdoor market.', file: 'saltlakecity_pioneer_market.mp3', fact: 'Salt Lake City was founded in 1847 by pioneers who crossed the entire Great Plains in covered wagons — the park named after them sits right in the center of the modern city!', search: 'outdoor Saturday market folk guitar produce vendors multilingual' },
     ],
   };
 
@@ -1246,7 +1737,7 @@
       item.className = 'city-item';
       item.dataset.city = city;
       item.innerHTML = `<span class="city-dot"></span>${city}`;
-      item.addEventListener('click', () => goToSoundPage(city));
+      item.addEventListener('click', () => { saveRecentCity(city); goToSoundPage(city); });
       grid.appendChild(item);
     });
     block.appendChild(grid);
@@ -1266,9 +1757,57 @@
   document.querySelector('nav').style.display = 'none';
 
   /* ── welcome → hero ── */
+  /* ── recent names dropdown ── */
+  (function initNameDropdown() {
+    const nameInput = document.getElementById('welcomeName');
+    const nameDropdown = document.getElementById('nameRecentDropdown');
+
+    function getRecentNames() {
+      try { return JSON.parse(localStorage.getItem('cs_recent_names') || '[]'); } catch { return []; }
+    }
+    function saveRecentName(name) {
+      const recent = getRecentNames().filter(n => n.toLowerCase() !== name.toLowerCase());
+      recent.unshift(name);
+      localStorage.setItem('cs_recent_names', JSON.stringify(recent.slice(0, 3)));
+    }
+    window._saveRecentName = saveRecentName;
+
+    function renderNameDropdown() {
+      const recent = getRecentNames();
+      if (recent.length === 0) { nameDropdown.classList.remove('visible'); return; }
+      nameDropdown.innerHTML = '';
+      recent.forEach(n => {
+        const item = document.createElement('div');
+        item.className = 'name-recent-item';
+        item.textContent = n;
+        item.addEventListener('mousedown', (e) => {
+          e.preventDefault();
+          nameInput.value = n;
+          nameDropdown.classList.remove('visible');
+          document.getElementById('welcomeWarning').classList.remove('visible');
+        });
+        nameDropdown.appendChild(item);
+      });
+      nameDropdown.classList.add('visible');
+    }
+
+    nameInput.addEventListener('focus', function () {
+      if (!this.value.trim()) renderNameDropdown();
+    });
+    nameInput.addEventListener('input', function () {
+      if (this.value.trim()) nameDropdown.classList.remove('visible');
+      else renderNameDropdown();
+    });
+    nameInput.addEventListener('blur', () => {
+      setTimeout(() => nameDropdown.classList.remove('visible'), 150);
+    });
+  })();
+
   function enterApp(mode) {
-    // personalise the hero eyebrow with the user's name
     const name = document.getElementById('welcomeName').value.trim();
+    localStorage.setItem('cs_name', name);
+    localStorage.setItem('cs_role', mode);
+    if (window._saveRecentName) window._saveRecentName(name);
     document.getElementById('navWelcome').textContent = 'Welcome, ' + name + ' :)';
     // show the right nav group
     document.getElementById('childNav').style.display  = mode === 'child'  ? 'flex' : 'none';
@@ -1281,10 +1820,13 @@
     setTimeout(() => {
       document.querySelector('nav').style.display = '';
       document.getElementById('welcomeShapes').classList.add('hidden');
-      showScreen('hero');
+      document.getElementById('shapesLayer').classList.remove('hidden');
+      shapesToggle.classList.add('on');
       welcome.style.opacity = '';
       welcome.style.transform = '';
-      document.getElementById('shapesLayer').classList.remove('hidden');
+      showScreen('type-screen');
+      document.getElementById('cities-screen').classList.add('active');
+      setTimeout(() => document.getElementById('city-input').focus(), 300);
     }, 450);
   }
   /* ── role selection ── */
@@ -1366,33 +1908,185 @@
     document.getElementById('cities-screen').classList.add('active');
   });
 
+  /* ── liked sounds ── */
+  const likedSounds = new Set();
+  function saveLiked() { localStorage.setItem('cs_liked', JSON.stringify([...likedSounds])); }
+
+  /* ── relocation city ── */
+  let relocationCity = null;
+  let relocationSounds = [];
+
+  /* ── restore from localStorage ── */
+  (function restoreSession() {
+    const savedName = localStorage.getItem('cs_name');
+    const savedRole = localStorage.getItem('cs_role');
+    const savedRelocation = localStorage.getItem('cs_relocation');
+    const savedLiked = localStorage.getItem('cs_liked');
+
+    if (savedRole) {
+      selectedRole = savedRole;
+      document.getElementById(savedRole === 'child' ? 'btnChild' : 'btnParent').classList.add('selected');
+    }
+    if (savedRelocation) {
+      relocationCity = savedRelocation;
+      relocationSounds = citySounds[savedRelocation] || [];
+    }
+    if (savedLiked) {
+      try { JSON.parse(savedLiked).forEach(k => likedSounds.add(k)); } catch {}
+    }
+  })();
+  function burstStars(anchorEl) {
+    const rect = anchorEl.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+    const emojis = ['⭐','✨','🌟','💛','⭐','✨','🌟','✨','⭐'];
+    emojis.forEach((em, i) => {
+      const el = document.createElement('span');
+      el.className = 'star-particle';
+      el.textContent = em;
+      const angle = (i / emojis.length) * 360 + Math.random() * 20;
+      const dist = 60 + Math.random() * 60;
+      const rad = angle * Math.PI / 180;
+      const tx = Math.cos(rad) * dist;
+      const ty = Math.sin(rad) * dist - 20;
+      const dur = 0.7 + Math.random() * 0.4;
+      el.style.cssText = `left:${cx}px;top:${cy}px;--tx:${tx}px;--ty:${ty}px;--rot:${Math.random()*60-30}deg;--dur:${dur}s;`;
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), dur * 1000 + 100);
+    });
+  }
+
+  document.getElementById('relocationBtn').addEventListener('click', () => {
+    const btn = document.getElementById('relocationBtn');
+    if (relocationCity === currentSoundCity) {
+      relocationCity = null;
+      relocationSounds = [];
+      localStorage.removeItem('cs_relocation');
+      btn.classList.remove('active');
+      btn.innerHTML = '<span class="btn-relocation-icon">⌂</span> My new city';
+    } else {
+      relocationCity = currentSoundCity;
+      relocationSounds = [...currentDisplayedSounds];
+      localStorage.setItem('cs_relocation', relocationCity);
+      btn.classList.add('active');
+      btn.innerHTML = '<span class="btn-relocation-icon">⌂</span> My new city — saved!';
+      burstStars(btn);
+    }
+  });
+
+  /* ── recent cities ── */
+  function getRecentCities() {
+    try { return JSON.parse(localStorage.getItem('cs_recent_cities') || '[]'); } catch { return []; }
+  }
+  function saveRecentCity(city) {
+    const recent = getRecentCities().filter(c => c !== city);
+    recent.unshift(city);
+    localStorage.setItem('cs_recent_cities', JSON.stringify(recent.slice(0, 3)));
+  }
+
+  const cityInput = document.getElementById('city-input');
+  const cityDropdown = document.getElementById('cityRecentDropdown');
+
+  function renderRecentDropdown() {
+    const recent = getRecentCities();
+    if (recent.length === 0) { cityDropdown.classList.remove('visible'); return; }
+    cityDropdown.innerHTML = '';
+    recent.forEach(city => {
+      const item = document.createElement('div');
+      item.className = 'city-recent-item';
+      item.textContent = city;
+      item.addEventListener('mousedown', (e) => {
+        e.preventDefault();
+        cityInput.value = city;
+        adjustInputWidth(city);
+        cityDropdown.classList.remove('visible');
+        goToSoundPage(city);
+      });
+      cityDropdown.appendChild(item);
+    });
+    cityDropdown.classList.add('visible');
+  }
+
+  cityInput.addEventListener('focus', function () {
+    if (!this.value.trim()) renderRecentDropdown();
+  });
+  cityInput.addEventListener('blur', () => {
+    setTimeout(() => cityDropdown.classList.remove('visible'), 150);
+  });
+
   /* ── input logic ── */
   function adjustInputWidth(val) {
-    const input = document.getElementById('city-input');
-    input.style.width = (Math.max(val.length, 3) + 1) + 'ch';
+    cityInput.style.width = (Math.max(val.length, 3) + 1) + 'ch';
   }
-  document.getElementById('city-input').addEventListener('input', function () {
+  cityInput.addEventListener('input', function () {
     adjustInputWidth(this.value || 'your city');
+    if (this.value.trim()) {
+      cityDropdown.classList.remove('visible');
+    } else {
+      renderRecentDropdown();
+    }
     const typed = this.value.trim().toLowerCase();
     document.querySelectorAll('.city-item').forEach(item => {
       item.classList.toggle('selected', item.dataset.city.toLowerCase() === typed);
     });
   });
-  document.getElementById('city-input').addEventListener('keydown', function (e) {
+  cityInput.addEventListener('keydown', function (e) {
     if (e.key === 'Enter') {
       const typed = this.value.trim();
       const match = Object.keys(citySounds).find(c => c.toLowerCase() === typed.toLowerCase());
-      if (match) goToSoundPage(match);
+      if (match) {
+        saveRecentCity(match);
+        cityDropdown.classList.remove('visible');
+        goToSoundPage(match);
+      }
     }
   });
 
-  /* ── liked sounds ── */
-  const likedSounds = new Set();
+  /* ── API keys ── */
+  const FREESOUND_TOKEN = 'oxMF2VF4Ci3KIu7uc69pDnz47lPYMw2XHLEJYTUQ';
+  const ELEVENLABS_KEY  = 'sk_ec9c05155e91cac2e83e3334422b83a3cc088c77b29b20fe';
+  const previewCache = {};
+
+  async function fetchFromFreesound(sound) {
+    const shortTitle = sound.title.split(' ').slice(0, 2).join(' ');
+    const queries = [sound.search, sound.title, shortTitle].filter(Boolean);
+    for (const q of queries) {
+      try {
+        const url = `https://freesound.org/apiv2/search/text/?query=${encodeURIComponent(q)}&token=${FREESOUND_TOKEN}&fields=id,previews&page_size=1&filter=duration:[2 TO 120]`;
+        const data = await fetch(url).then(r => r.json());
+        const preview = data.results?.[0]?.previews?.['preview-hq-mp3'] ?? null;
+        if (preview) return preview;
+      } catch { }
+    }
+    return null;
+  }
+
+  async function fetchFromElevenLabs(sound) {
+    try {
+      const res = await fetch('https://api.elevenlabs.io/v1/sound-generation', {
+        method: 'POST',
+        headers: { 'xi-api-key': ELEVENLABS_KEY, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: sound.desc, duration_seconds: 5, prompt_influence: 0.3 }),
+      });
+      if (!res.ok) return null;
+      const blob = await res.blob();
+      return URL.createObjectURL(blob);
+    } catch { return null; }
+  }
 
   /* ── sound page ── */
   let currentAudio     = null;
   let currentCard      = null;
   let currentSoundCity = '';
+
+  function shufflePick(arr, n) {
+    const copy = [...arr];
+    for (let i = copy.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [copy[i], copy[j]] = [copy[j], copy[i]];
+    }
+    return copy.slice(0, n);
+  }
 
   function stopAllAudio() {
     if (currentAudio) { currentAudio.pause(); currentAudio.currentTime = 0; }
@@ -1405,15 +2099,27 @@
     currentSoundCity = city;
     document.getElementById('soundCityName').textContent = city;
     document.getElementById('cities-screen').classList.remove('active');
+    renderSoundCards(shufflePick(citySounds[city] || [], 4));
+    const btn = document.getElementById('relocationBtn');
+    if (relocationCity === city) {
+      btn.classList.add('active');
+      btn.innerHTML = '<span class="btn-relocation-icon">⌂</span> My new city — saved!';
+    } else {
+      btn.classList.remove('active');
+      btn.innerHTML = '<span class="btn-relocation-icon">⌂</span> My new city';
+    }
+    showScreen('sound-screen');
+  }
 
+  let currentDisplayedSounds = [];
+
+  function renderSoundCards(sounds) {
+    currentDisplayedSounds = sounds;
+    stopAllAudio();
     const grid = document.getElementById('soundCardsGrid');
     grid.innerHTML = '';
-    const sounds = citySounds[city] || [];
 
     sounds.forEach(sound => {
-      const wrap = document.createElement('div');
-      wrap.className = 'sound-card-wrap';
-
       const card = document.createElement('div');
       card.className = 'sound-card';
 
@@ -1460,32 +2166,38 @@
       playBtn.className = 'card-play-btn';
       playBtn.innerHTML = '▶';
 
-      playBtn.addEventListener('click', () => {
-        if (card.classList.contains('playing')) {
-          stopAllAudio();
-          return;
-        }
+      playBtn.addEventListener('click', async () => {
+        if (card.classList.contains('playing')) { stopAllAudio(); return; }
         stopAllAudio();
-        const audio = new Audio('sounds/' + sound.file);
+        playBtn.innerHTML = '…'; playBtn.disabled = true; dur.textContent = 'Loading…';
+
+        let previewUrl = previewCache[sound.file] || null;
+        if (!previewUrl) {
+          previewUrl = await fetchFromFreesound(sound);
+          if (previewUrl) { previewCache[sound.file] = previewUrl; fname.textContent = 'freesound.org'; }
+        }
+        if (!previewUrl) {
+          dur.textContent = 'Generating…';
+          previewUrl = await fetchFromElevenLabs(sound);
+          if (previewUrl) { previewCache[sound.file] = previewUrl; fname.textContent = 'AI generated · elevenlabs'; }
+        }
+
+        playBtn.disabled = false;
+        if (!previewUrl) { dur.textContent = 'Not found'; playBtn.innerHTML = '▶'; return; }
+
+        const audio = new Audio(previewUrl);
         audio.addEventListener('loadedmetadata', () => {
           const m = Math.floor(audio.duration / 60);
           const s = Math.floor(audio.duration % 60).toString().padStart(2, '0');
           dur.textContent = m + ':' + s;
         });
         audio.addEventListener('ended', () => {
-          card.classList.remove('playing');
-          playBtn.innerHTML = '▶';
-          currentAudio = null; currentCard = null;
-          dur.textContent = '— : —';
+          card.classList.remove('playing'); playBtn.innerHTML = '▶';
+          currentAudio = null; currentCard = null; dur.textContent = '— : —';
         });
-        audio.addEventListener('error', () => {
-          dur.textContent = 'No file yet';
-        });
-        audio.play().catch(() => { dur.textContent = 'No file yet'; });
-        card.classList.add('playing');
-        playBtn.innerHTML = '■';
-        currentAudio = audio;
-        currentCard = card;
+        audio.play().catch(() => { dur.textContent = 'Error'; playBtn.innerHTML = '▶'; });
+        card.classList.add('playing'); playBtn.innerHTML = '■';
+        currentAudio = audio; currentCard = card;
       });
 
       const likeBtn = document.createElement('button');
@@ -1496,14 +2208,12 @@
       if (likedSounds.has(likeKey)) { likeBtn.classList.add('liked'); likeBtn.innerHTML = '♥'; }
       likeBtn.addEventListener('click', () => {
         if (likedSounds.has(likeKey)) {
-          likedSounds.delete(likeKey);
-          likeBtn.classList.remove('liked');
-          likeBtn.innerHTML = '♡';
+          if (!confirm('Remove "' + sound.title + '" from your saved sounds?')) return;
+          likedSounds.delete(likeKey); likeBtn.classList.remove('liked'); likeBtn.innerHTML = '♡';
         } else {
-          likedSounds.add(likeKey);
-          likeBtn.classList.add('liked');
-          likeBtn.innerHTML = '♥';
+          likedSounds.add(likeKey); likeBtn.classList.add('liked'); likeBtn.innerHTML = '♥';
         }
+        saveLiked();
       });
 
       const btnGroup = document.createElement('div');
@@ -1516,7 +2226,7 @@
       grid.appendChild(card);
     });
 
-    // render facts section
+    // update facts section to match displayed cards
     const factsSection = document.getElementById('factsSection');
     const factsWithContent = sounds.filter(s => s.fact);
     if (factsWithContent.length > 0) {
@@ -1527,15 +2237,15 @@
       factsSection.appendChild(heading);
       const factsGrid = document.createElement('div');
       factsGrid.className = 'facts-grid';
-      factsWithContent.forEach(sound => {
+      factsWithContent.forEach(s => {
         const item = document.createElement('div');
         item.className = 'fact-item';
         const text = document.createElement('p');
         text.className = 'fact-text';
-        text.textContent = sound.fact;
+        text.textContent = s.fact;
         const titleEl = document.createElement('div');
         titleEl.className = 'fact-sound-title';
-        titleEl.textContent = sound.title;
+        titleEl.textContent = s.title;
         item.appendChild(text);
         item.appendChild(titleEl);
         factsGrid.appendChild(item);
@@ -1545,8 +2255,6 @@
     } else {
       factsSection.style.display = 'none';
     }
-
-    showScreen('sound-screen');
   }
 
   /* ── shapes toggle ── */
@@ -1555,6 +2263,32 @@
     const layer = document.getElementById('shapesLayer');
     const isOn = shapesToggle.classList.toggle('on');
     layer.classList.toggle('hidden', !isOn);
+  });
+
+  function burstNotes(anchorEl) {
+    const rect = anchorEl.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+    const emojis = ['🎵','🎶','🎵','🎷','🎸','🎵','🎶','🎺'];
+    emojis.forEach((em, i) => {
+      const el = document.createElement('span');
+      el.className = 'note-particle';
+      el.textContent = em;
+      const spread = 70 + Math.random() * 50;
+      const tx = (Math.random() - 0.5) * spread;
+      const ty = -(50 + Math.random() * 60);
+      const dur = 0.55 + Math.random() * 0.35;
+      const delay = i * 0.04;
+      el.style.cssText = `left:${cx + (Math.random()-0.5)*30}px;top:${cy}px;--tx:${tx}px;--ty:${ty}px;--dur:${dur}s;animation-delay:${delay}s;`;
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), (dur + delay) * 1000 + 100);
+    });
+  }
+
+  /* ── refresh sounds ── */
+  document.getElementById('refreshSoundsBtn').addEventListener('click', (e) => {
+    renderSoundCards(shufflePick(citySounds[currentSoundCity] || [], 4));
+    burstNotes(e.currentTarget);
   });
 
   /* ── sound book ── */
@@ -1566,12 +2300,10 @@
   });
 
   document.getElementById('soundbookBackBtn').addEventListener('click', () => {
-    const hero = document.getElementById('hero');
-    hero.style.opacity = '';
-    hero.style.transform = '';
     document.getElementById('shapesLayer').classList.remove('hidden');
     shapesToggle.classList.add('on');
-    showScreen('hero');
+    showScreen('type-screen');
+    document.getElementById('cities-screen').classList.add('active');
   });
 
   /* ── soundbook tab switching ── */
@@ -1581,6 +2313,7 @@
       document.querySelectorAll('.soundbook-panel').forEach(p => p.classList.remove('active'));
       tab.classList.add('active');
       document.getElementById('panel-' + tab.dataset.tab).classList.add('active');
+      if (tab.dataset.tab === 'recorded') renderRecordedPanel();
     });
   });
 
@@ -1592,71 +2325,300 @@
     if (likedSounds.size === 0) {
       savedPanel.innerHTML = '<p class="soundbook-empty">No sounds saved yet.<br>Tap ♡ on any sound to add it here.</p>';
     } else {
-      const byCity = {};
+      const grid = document.createElement('div');
+      grid.className = 'soundbook-saved-grid';
+
       likedSounds.forEach(key => {
         const [city, title] = key.split('::');
-        if (!byCity[city]) byCity[city] = [];
-        byCity[city].push(title);
-      });
+        const soundData = (citySounds[city] || []).find(s => s.title === title);
+        if (!soundData) return;
 
-      Object.entries(byCity).forEach(([city, titles]) => {
-        const block = document.createElement('div');
-        block.className = 'soundbook-city-block';
+        const card = document.createElement('div');
+        card.className = 'soundbook-card';
 
-        const label = document.createElement('div');
-        label.className = 'soundbook-city-label';
-        label.innerHTML = '📍 ' + city;
-        block.appendChild(label);
+        const cityEl = document.createElement('div');
+        cityEl.className = 'soundbook-card-city';
+        cityEl.textContent = city;
 
-        titles.forEach(title => {
-          const soundData = (citySounds[city] || []).find(s => s.title === title);
-          if (!soundData) return;
+        const titleEl = document.createElement('div');
+        titleEl.className = 'soundbook-card-title';
+        titleEl.textContent = title;
 
-          const item = document.createElement('div');
-          item.className = 'soundbook-item';
+        const footer = document.createElement('div');
+        footer.className = 'soundbook-card-footer';
 
-          const left = document.createElement('div');
-          left.className = 'soundbook-item-left';
-          const dot = document.createElement('span');
-          dot.className = 'soundbook-item-dot';
-          const name = document.createElement('span');
-          name.textContent = title;
-          left.appendChild(dot);
-          left.appendChild(name);
-
-          const playBtn = document.createElement('button');
-          playBtn.className = 'soundbook-play-btn';
-          playBtn.innerHTML = '▶';
-          playBtn.addEventListener('click', () => {
-            if (currentAudio && currentCard === playBtn) {
-              stopAllAudio();
-              playBtn.innerHTML = '▶';
-              playBtn.classList.remove('playing');
-              return;
-            }
-            stopAllAudio();
-            document.querySelectorAll('.soundbook-play-btn').forEach(b => { b.innerHTML = '▶'; b.classList.remove('playing'); });
-            const audio = new Audio('sounds/' + soundData.file);
-            audio.addEventListener('ended', () => { playBtn.innerHTML = '▶'; playBtn.classList.remove('playing'); currentAudio = null; currentCard = null; });
-            audio.play().catch(() => {});
-            playBtn.innerHTML = '■';
-            playBtn.classList.add('playing');
-            currentAudio = audio;
-            currentCard  = playBtn;
-          });
-
-          item.appendChild(left);
-          item.appendChild(playBtn);
-          block.appendChild(item);
+        const unsaveBtn = document.createElement('button');
+        unsaveBtn.className = 'soundbook-unsave-btn';
+        unsaveBtn.innerHTML = '♥';
+        unsaveBtn.title = 'Remove from saved';
+        unsaveBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          if (!confirm('Remove "' + title + '" from your saved sounds?')) return;
+          likedSounds.delete(key);
+          saveLiked();
+          stopAllAudio();
+          renderSoundBook();
         });
 
-        savedPanel.appendChild(block);
+        const playBtn = document.createElement('button');
+        playBtn.className = 'soundbook-play-btn';
+        playBtn.innerHTML = '▶';
+        playBtn.addEventListener('click', async (e) => {
+          e.stopPropagation();
+          if (currentAudio && currentCard === playBtn) {
+            stopAllAudio();
+            playBtn.innerHTML = '▶'; playBtn.classList.remove('playing');
+            return;
+          }
+          stopAllAudio();
+          document.querySelectorAll('.soundbook-play-btn').forEach(b => { b.innerHTML = '▶'; b.classList.remove('playing'); });
+
+          playBtn.innerHTML = '…'; playBtn.disabled = true;
+
+          let previewUrl = previewCache[soundData.file] || null;
+          if (!previewUrl) {
+            previewUrl = await fetchFromFreesound(soundData);
+            if (previewUrl) previewCache[soundData.file] = previewUrl;
+          }
+          if (!previewUrl) {
+            previewUrl = await fetchFromElevenLabs(soundData);
+            if (previewUrl) previewCache[soundData.file] = previewUrl;
+          }
+
+          playBtn.disabled = false;
+          if (!previewUrl) { playBtn.innerHTML = '▶'; return; }
+
+          const audio = new Audio(previewUrl);
+          audio.addEventListener('ended', () => {
+            playBtn.innerHTML = '▶'; playBtn.classList.remove('playing');
+            currentAudio = null; currentCard = null;
+          });
+          audio.play().catch(() => { playBtn.innerHTML = '▶'; });
+          playBtn.innerHTML = '■'; playBtn.classList.add('playing');
+          currentAudio = audio; currentCard = playBtn;
+        });
+
+        footer.appendChild(unsaveBtn);
+        footer.appendChild(playBtn);
+        card.appendChild(cityEl);
+        card.appendChild(titleEl);
+        card.appendChild(footer);
+        grid.appendChild(card);
       });
+
+      savedPanel.appendChild(grid);
     }
 
     // ── Recorded Sounds panel ──
     renderRecordedPanel();
   }
+
+  /* ── daily mission ── */
+  const dailyMissions = [
+    { text: 'Record the sound of your morning commute', hint: 'Step outside and capture the rhythm of how your neighborhood wakes up — buses, birds, footsteps.', nearbyType: 'transit_station', nearbyLabel: 'Transit stops nearby' },
+    { text: 'Find a street musician and record 10 seconds', hint: 'Listen for buskers in a market, station, or park. Their sound tells the story of the city.', nearbyType: 'subway_station', nearbyLabel: 'Stations nearby' },
+    { text: 'Record the sound of a local coffee shop', hint: 'Espresso machines, chatter, cups clinking — the urban soundtrack of a slow morning.', nearbyType: 'cafe', nearbyLabel: 'Cafes nearby' },
+    { text: 'Capture the sound of your nearest park', hint: 'Wind through leaves, children playing, or birds calling. Nature hides in every city.', nearbyType: 'park', nearbyLabel: 'Parks nearby' },
+    { text: 'Record an intersection at peak hour', hint: 'Stand at a busy crossing and capture the layered noise of the city in full motion.', nearbyType: 'transit_station', nearbyLabel: 'Busy spots nearby' },
+    { text: 'Find the quietest spot near you and record it', hint: 'Even silence has a texture — distant hum, rustling, the occasional footstep.', nearbyType: 'park', nearbyLabel: 'Quiet spots nearby' },
+    { text: 'Record the sound of a local food market', hint: 'Vendors calling out, sizzling pans, the shuffle of bags — a market is alive with sound.', nearbyType: 'grocery_or_supermarket', nearbyLabel: 'Markets nearby' },
+    { text: 'Capture rain or wind in your neighborhood', hint: 'Weather shapes the sonic identity of a place. Record it while it lasts.', nearbyType: 'park', nearbyLabel: 'Open spaces nearby' },
+    { text: 'Record a moving train or subway', hint: 'The screech of the tracks, the rush of air, the closing doors — transit is pure city sound.', nearbyType: 'train_station', nearbyLabel: 'Train stations nearby' },
+    { text: 'Find a water feature and record it', hint: 'Fountains, rivers, or even a rain drain. Water creates a calming constant in urban life.', nearbyType: 'park', nearbyLabel: 'Parks & plazas nearby' },
+    { text: 'Record children playing nearby', hint: 'A schoolyard, playground, or sidewalk — the sound of play reveals the life of a neighborhood.', nearbyType: 'park', nearbyLabel: 'Parks nearby' },
+    { text: 'Capture the sound of a construction site', hint: 'Hammers, drills, reversing trucks — cities are always being remade.', nearbyType: 'point_of_interest', nearbyLabel: 'Active areas nearby' },
+    { text: 'Record someone speaking a local language or accent', hint: 'With permission, capture a few words. Dialect is part of a city\'s sonic fingerprint.', nearbyType: 'shopping_mall', nearbyLabel: 'Busy places nearby' },
+    { text: 'Find a bell, clock, or chime and record it', hint: 'Church bells, school bells, city clocks — time sounds different in every place.', nearbyType: 'church', nearbyLabel: 'Churches nearby' },
+    { text: 'Record the sound inside a library or museum', hint: 'Hushed voices, echoing footsteps, the rustle of pages — culture has its own acoustics.', nearbyType: 'museum', nearbyLabel: 'Museums & libraries nearby' },
+    { text: 'Capture the sound of a local sports moment', hint: 'A crowd cheer, a referee\'s whistle, a ball bouncing — sport pulses through city life.', nearbyType: 'stadium', nearbyLabel: 'Sports venues nearby' },
+    { text: 'Record the sound of your front door or building entrance', hint: 'Buzzer, creak, footsteps on tile — home has a sound. What does yours sound like?', nearbyType: 'point_of_interest', nearbyLabel: 'Landmarks nearby' },
+    { text: 'Find a restaurant and record its kitchen sounds', hint: 'Even from outside, you can hear the sizzle, the orders, the rhythm of a working kitchen.', nearbyType: 'restaurant', nearbyLabel: 'Restaurants nearby' },
+    { text: 'Record an animal sound in your city', hint: 'Pigeons, dogs, cats, squirrels — urban wildlife has its own presence.', nearbyType: 'zoo', nearbyLabel: 'Parks & zoos nearby' },
+    { text: 'Capture the sound of a crosswalk signal', hint: 'Beeping, chirping, or talking — pedestrian signals vary wildly from city to city.', nearbyType: 'transit_station', nearbyLabel: 'Crossings nearby' },
+    { text: 'Record the echo inside a tunnel or underpass', hint: 'Architecture changes how sound moves. Find a hollow space and listen.', nearbyType: 'subway_station', nearbyLabel: 'Subway stations nearby' },
+    { text: 'Capture the sound of an evening street', hint: 'When the day slows down, the city reveals a different voice — softer, longer, more distant.', nearbyType: 'bar', nearbyLabel: 'Evening spots nearby' },
+    { text: 'Record a neighbour\'s music drifting through the window', hint: 'The accidental soundtrack of shared walls and open windows is uniquely urban.', nearbyType: 'point_of_interest', nearbyLabel: 'Points of interest nearby' },
+    { text: 'Find a hardware or corner store and capture its sounds', hint: 'Shelves restocking, a door chime, distant radio — small shops have character.', nearbyType: 'store', nearbyLabel: 'Stores nearby' },
+    { text: 'Record a crowd waiting — a bus stop, queue, or platform', hint: 'Collective patience has a sound: shuffling feet, quiet sighs, muffled conversations.', nearbyType: 'bus_station', nearbyLabel: 'Bus stops nearby' },
+    { text: 'Capture the sound of a city at night', hint: 'After midnight, the city doesn\'t go silent — it just changes frequency.', nearbyType: 'night_club', nearbyLabel: 'Night spots nearby' },
+    { text: 'Record the sound of your window on a busy day', hint: 'Street noise filtered through glass takes on a new texture. Press record and listen.', nearbyType: 'point_of_interest', nearbyLabel: 'Busy spots nearby' },
+    { text: 'Find a neighbourhood you haven\'t explored and record it', hint: 'Every block has its own sonic personality. Walk somewhere new today.', nearbyType: 'neighborhood', nearbyLabel: 'Places to explore nearby' },
+  ];
+
+  function getDailyMission() {
+    const today = new Date();
+    const seed = today.getFullYear() * 10000 + (today.getMonth() + 1) * 100 + today.getDate();
+    return dailyMissions[seed % dailyMissions.length];
+  }
+
+  const GEMINI_KEY = 'AIzaSyBIgotFY_NwqayV3I28rPuVdjUFPRGL1Ik';
+
+  async function askGemini(question) {
+    const res = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-04-17:generateContent`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-goog-api-key': GEMINI_KEY
+        },
+        body: JSON.stringify({ contents: [{ parts: [{ text: question }] }] })
+      }
+    );
+    const data = await res.json();
+    if (!res.ok) return `Error ${res.status}: ${data?.error?.message ?? 'Unknown error'}`;
+    return data.candidates?.[0]?.content?.parts?.[0]?.text ?? null;
+  }
+
+  const DM_CITY_CHIPS = [
+    'Are there any parks in {city}?',
+    'Best coffee shops in {city}?',
+    'Family-friendly neighbourhoods in {city}?',
+    'What is apartment rent like in {city}?',
+    'Public transport options in {city}?',
+  ];
+
+  function renderDailyMission() {
+    const mission = getDailyMission();
+    const today = new Date();
+    const dateStr = today.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+    document.getElementById('dmDate').textContent = dateStr;
+    document.getElementById('dmMissionText').textContent = mission.text;
+    document.getElementById('dmMissionHint').textContent = mission.hint;
+
+    const streak = document.getElementById('dmStreak');
+    streak.innerHTML = '<span style="margin-right:.4rem;">This week</span>';
+    for (let i = 0; i < 7; i++) {
+      const pip = document.createElement('div');
+      pip.className = 'dm-streak-pip' + (i < today.getDay() ? ' done' : '');
+      streak.appendChild(pip);
+    }
+
+    const askWrap = document.getElementById('dmAsk');
+    if (!relocationCity) { askWrap.style.display = 'none'; return; }
+
+    askWrap.style.display = 'block';
+    document.getElementById('dmAskCityName').textContent = relocationCity;
+
+    const chipsEl = document.getElementById('dmAskChips');
+    chipsEl.innerHTML = '';
+    DM_CITY_CHIPS.forEach(tpl => {
+      const q = tpl.replace('{city}', relocationCity);
+      const chip = document.createElement('button');
+      chip.className = 'dm-ask-chip';
+      chip.textContent = q;
+      chip.addEventListener('click', () => {
+        document.getElementById('dmAskInput').value = q;
+        document.getElementById('dmAskInput').focus();
+      });
+      chipsEl.appendChild(chip);
+    });
+
+    const respEl = document.getElementById('dmAskResponse');
+    respEl.style.display = 'none';
+    respEl.textContent = '';
+    document.getElementById('dmAskInput').value = '';
+  }
+
+  async function submitCityQuestion() {
+    const input = document.getElementById('dmAskInput');
+    const respEl = document.getElementById('dmAskResponse');
+    const q = input.value.trim();
+    if (!q) return;
+
+    respEl.style.display = 'block';
+    respEl.className = 'dm-ask-response dm-ask-loading';
+    respEl.textContent = 'Thinking…';
+
+    const answer = await askGemini(q);
+    respEl.className = 'dm-ask-response';
+    respEl.textContent = answer ?? 'No response returned from Gemini.';
+  }
+
+  document.getElementById('dmAskSend').addEventListener('click', submitCityQuestion);
+  document.getElementById('dmAskInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') submitCityQuestion();
+  });
+
+  document.getElementById('dailyMissionBtn').addEventListener('click', () => {
+    renderDailyMission();
+    showScreen('daily-mission-screen');
+    document.getElementById('shapesLayer').classList.remove('hidden');
+    shapesToggle.classList.add('on');
+  });
+
+  function renderParentDashboard() {
+    const childName = document.getElementById('welcomeName').value.trim();
+    document.getElementById('pdTitle').textContent = "My Child's Progress";
+
+    // mission
+    const mission = getDailyMission();
+    document.getElementById('pdMissionText').textContent = mission.text;
+    document.getElementById('pdMissionHint').textContent = mission.hint;
+
+    // streak pips
+    const today = new Date();
+    const dayOfWeek = today.getDay(); // 0=Sun
+    const streak = document.getElementById('pdStreak');
+    streak.innerHTML = '<span style="margin-right:.4rem;">This week</span>';
+    const days = ['S','M','T','W','T','F','S'];
+    for (let i = 0; i < 7; i++) {
+      const pip = document.createElement('div');
+      pip.className = 'pd-streak-pip' + (i < dayOfWeek ? ' done' : '');
+      pip.title = days[i];
+      streak.appendChild(pip);
+    }
+
+    // progress bar (days completed / 7)
+    const pct = Math.round((dayOfWeek / 7) * 100);
+    document.getElementById('pdProgressBar').style.width = pct + '%';
+    document.getElementById('pdProgressLabel').textContent = dayOfWeek + ' of 7 days this week';
+
+    // child's saved sounds
+    const grid = document.getElementById('pdSoundsGrid');
+    grid.innerHTML = '';
+    if (likedSounds.size === 0) {
+      grid.innerHTML = '<p class="pd-empty">No sounds saved yet.</p>';
+      return;
+    }
+    likedSounds.forEach(key => {
+      const [city, title] = key.split('::');
+      const card = document.createElement('div');
+      card.className = 'pd-sound-card';
+
+      const cityPill = document.createElement('div');
+      cityPill.className = 'pd-sound-city';
+      cityPill.textContent = city;
+
+      const name = document.createElement('div');
+      name.className = 'pd-sound-name';
+      name.textContent = title;
+
+      card.appendChild(cityPill);
+      card.appendChild(name);
+      grid.appendChild(card);
+    });
+  }
+
+  document.getElementById('dashboardBtn').addEventListener('click', () => {
+    renderParentDashboard();
+    showScreen('parent-dashboard-screen');
+  });
+
+  document.getElementById('dmBackBtn').addEventListener('click', () => {
+    showScreen('type-screen');
+    document.getElementById('cities-screen').classList.add('active');
+  });
+
+  document.getElementById('dmRecordBtn').addEventListener('click', () => {
+    const mission = getDailyMission();
+    openRecModal(mission.text);
+  });
+
+  document.getElementById('dmSkipBtn').addEventListener('click', () => {
+    showScreen('type-screen');
+    document.getElementById('cities-screen').classList.add('active');
+  });
 
   /* ── scroll hint fade ── */
   window.addEventListener('scroll', () => {
@@ -1669,45 +2631,41 @@
   <div class="rec-overlay" id="recOverlay">
     <div class="rec-modal">
 
-      <!-- Step 1: Record -->
+      <button class="rec-close-btn" id="recCloseBtn">✕</button>
+
+      <!-- Step 1 -->
       <div id="recStep1">
-        <div class="rec-modal-header">
-          <span class="rec-modal-title">New Recording</span>
-          <button class="rec-close-btn" id="recCloseBtn">✕</button>
-        </div>
+        <span class="rec-eyebrow">New Recording</span>
         <div class="rec-waveform" id="recWaveformWrap">
           <canvas id="recCanvas"></canvas>
           <span class="rec-waveform-hint" id="recWaveformHint">Press record to start</span>
         </div>
         <div class="rec-timer" id="recTimer">0:00</div>
-        <div class="rec-controls">
-          <button class="rec-btn rec-btn-ghost" id="recResetBtn" style="display:none">Reset</button>
-          <button class="rec-main-btn" id="recMainBtn" title="Start Recording">●</button>
-          <button class="rec-btn rec-btn-ghost" id="recPauseBtn" style="display:none">Pause</button>
+        <div class="rec-main-row">
+          <button class="rec-main-btn" id="recMainBtn">●</button>
         </div>
-        <div style="display:flex;justify-content:center;">
-          <button class="rec-btn rec-btn-primary" id="recNextBtn" style="display:none">Save Recording →</button>
+        <div class="rec-secondary-row" id="recSecondaryRow" style="display:none">
+          <button class="rm-btn rm-btn-outline" id="recResetBtn">↺ Reset</button>
+          <button class="rm-btn rm-btn-outline" id="recPauseBtn">⏸ Pause</button>
+        </div>
+        <div class="rec-save-row" style="flex-direction:column; gap:.8rem;">
+          <button class="rm-btn rm-btn-outline rm-btn-full" id="recResetAboveBtn" style="display:none">↺ Record Again</button>
+          <button class="rm-btn rm-btn-solid rm-btn-full" id="recNextBtn" style="display:none">Save Recording →</button>
         </div>
       </div>
 
-      <!-- Step 2: Name + Cover -->
+      <!-- Step 2 -->
       <div id="recStep2" style="display:none">
-        <div class="rec-modal-header">
-          <span class="rec-modal-title">Save Your Sound</span>
-          <button class="rec-close-btn" id="recCloseBtn2">✕</button>
-        </div>
+        <span class="rec-eyebrow">Save Your Sound</span>
         <div class="rec-save-form">
-
           <div>
             <span class="rec-field-label">Sound Name</span>
-            <input class="rec-input" id="recNameInput" type="text" placeholder="e.g. Morning Birds in Brooklyn..." maxlength="40" />
+            <input class="rec-input" id="recNameInput" type="text" placeholder="e.g. Morning birds in Brooklyn…" maxlength="40" />
           </div>
-
           <div>
             <span class="rec-field-label">Date Recorded</span>
             <input class="rec-input" id="recDateInput" type="date" />
           </div>
-
           <div>
             <span class="rec-field-label">Category</span>
             <div class="rec-category-grid" id="recCategoryGrid">
@@ -1720,23 +2678,18 @@
               <button class="rec-cat-btn" data-cat="Other">Other</button>
             </div>
           </div>
-
           <div>
             <span class="rec-field-label">Cover Image (optional)</span>
             <div class="rec-cover-upload" id="recCoverUpload">
               <input type="file" id="recCoverFile" accept="image/*">
               <img id="recCoverPreview" class="rec-cover-preview" alt="Cover preview" />
-              <div id="recCoverPlaceholder" class="rec-cover-placeholder-text">
-                Click to upload a cover image<br>JPG or PNG
-              </div>
+              <div id="recCoverPlaceholder" class="rec-cover-placeholder-text">Click to upload · JPG or PNG</div>
             </div>
           </div>
-
           <div class="rec-save-actions">
-            <button class="rec-btn rec-btn-ghost" id="recBackBtn">← Back</button>
-            <button class="rec-btn rec-btn-primary" id="recConfirmBtn">Save to Sound Book</button>
+            <button class="rm-btn rm-btn-outline" id="recBackBtn">← Back</button>
+            <button class="rm-btn rm-btn-solid" id="recConfirmBtn">Save to Sound Book</button>
           </div>
-
         </div>
       </div>
 
@@ -1774,16 +2727,21 @@
   const recWrap       = document.getElementById('recWaveformWrap');
   const recCtx        = recCanvas.getContext('2d');
 
-  function openRecModal() {
+  function openRecModal(prefillName) {
     recOverlay.classList.add('open');
     resetRecorder();
+    if (prefillName) {
+      setTimeout(() => {
+        const input = document.getElementById('recNameInput');
+        if (input) input.value = prefillName;
+      }, 50);
+    }
   }
   function closeRecModal() {
     recOverlay.classList.remove('open');
     stopAndCleanup();
   }
-  [document.getElementById('recCloseBtn'), document.getElementById('recCloseBtn2')]
-    .forEach(b => b.addEventListener('click', closeRecModal));
+  document.getElementById('recCloseBtn').addEventListener('click', closeRecModal);
   recOverlay.addEventListener('click', e => { if (e.target === recOverlay) closeRecModal(); });
 
   function resetRecorder() {
@@ -1810,30 +2768,31 @@
     recTimerEl.textContent = m + ':' + s;
   }
 
+  const recSecondaryRow = document.getElementById('recSecondaryRow');
+  const recResetAboveBtn = document.getElementById('recResetAboveBtn');
+
   function updateControls() {
-    recResetBtn.style.display = recState === 'idle' ? 'none' : 'inline-flex';
-    recNextBtn.style.display  = recState === 'stopped' ? 'inline-flex' : 'none';
+    const isStopped = recState === 'stopped';
+    recNextBtn.style.display = isStopped ? 'inline-flex' : 'none';
+    recResetAboveBtn.style.display = isStopped ? 'inline-flex' : 'none';
 
     if (recState === 'idle') {
-      recMainBtn.textContent = '●';
-      recMainBtn.title = 'Start Recording';
-      recMainBtn.className = 'rec-main-btn';
-      recPauseBtn.style.display = 'none';
+      recMainBtn.textContent = '●'; recMainBtn.title = 'Start Recording';
+      recMainBtn.className = 'rec-main-btn'; recMainBtn.style.display = '';
+      recSecondaryRow.style.display = 'none';
     } else if (recState === 'recording') {
-      recMainBtn.textContent = '■';
-      recMainBtn.title = 'Stop Recording';
-      recMainBtn.className = 'rec-main-btn is-recording';
-      recPauseBtn.style.display = 'inline-flex';
-      recPauseBtn.textContent = 'Pause';
+      recMainBtn.textContent = '■'; recMainBtn.title = 'Stop Recording';
+      recMainBtn.className = 'rec-main-btn is-recording'; recMainBtn.style.display = '';
+      recSecondaryRow.style.display = 'flex';
+      recPauseBtn.textContent = '⏸ Pause';
     } else if (recState === 'paused') {
-      recMainBtn.textContent = '●';
-      recMainBtn.title = 'Resume Recording';
-      recMainBtn.className = 'rec-main-btn is-paused';
-      recPauseBtn.style.display = 'inline-flex';
-      recPauseBtn.textContent = 'Resume';
+      recMainBtn.textContent = '●'; recMainBtn.title = 'Resume Recording';
+      recMainBtn.className = 'rec-main-btn is-paused'; recMainBtn.style.display = '';
+      recSecondaryRow.style.display = 'flex';
+      recPauseBtn.textContent = '▶ Resume';
     } else if (recState === 'stopped') {
       recMainBtn.style.display = 'none';
-      recPauseBtn.style.display = 'none';
+      recSecondaryRow.style.display = 'none';
     }
   }
 
@@ -1943,9 +2902,8 @@
     updateControls();
   });
 
-  recResetBtn.addEventListener('click', () => {
-    resetRecorder();
-  });
+  recResetBtn.addEventListener('click', () => { resetRecorder(); });
+  recResetAboveBtn.addEventListener('click', () => { resetRecorder(); });
 
   recNextBtn.addEventListener('click', () => {
     recStep1.style.display = 'none';
@@ -2022,13 +2980,48 @@
     const addBtn = document.createElement('button');
     addBtn.className = 'rec-add-btn';
     addBtn.innerHTML = '+ Add Recording';
-    addBtn.addEventListener('click', openRecModal);
+    addBtn.addEventListener('click', () => openRecModal());
     panel.appendChild(addBtn);
+
+    // ── Relocation city iconic sounds ──
+    if (relocationCity && relocationSounds.length > 0) {
+      const section = document.createElement('div');
+      section.className = 'relocation-section';
+
+      const sectionLabel = document.createElement('div');
+      sectionLabel.className = 'relocation-section-label';
+      sectionLabel.innerHTML = 'Iconic sounds of <span class="relocation-section-city">' + relocationCity + '</span>';
+      section.appendChild(sectionLabel);
+
+      const soundsGrid = document.createElement('div');
+      soundsGrid.className = 'relocation-sounds-grid';
+
+      relocationSounds.forEach(sound => {
+        const card = document.createElement('div');
+        card.className = 'relocation-sound-card';
+
+        const titleEl = document.createElement('div');
+        titleEl.className = 'relocation-sound-title';
+        titleEl.textContent = sound.title;
+
+        const recordBtn = document.createElement('button');
+        recordBtn.className = 'btn-record-version';
+        recordBtn.innerHTML = '<span class="btn-record-version-dot"></span> Record my version';
+        recordBtn.addEventListener('click', () => openRecModal('My ' + sound.title));
+
+        card.appendChild(titleEl);
+        card.appendChild(recordBtn);
+        soundsGrid.appendChild(card);
+      });
+
+      section.appendChild(soundsGrid);
+      panel.appendChild(section);
+    }
 
     if (recordedSoundsList.length === 0) {
       const empty = document.createElement('p');
       empty.className = 'soundbook-empty';
-      empty.innerHTML = 'No recordings yet.<br>Tap the button above to start.';
+      empty.innerHTML = relocationCity ? 'No recordings yet.<br>Tap a sound above to record your version.' : 'No recordings yet.<br>Tap the button above to start.';
       panel.appendChild(empty);
       return;
     }
